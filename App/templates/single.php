@@ -18,5 +18,19 @@ $this->title = 'Post';
     <p>Crée le : <?= htmlspecialchars($post->getDateAdded());?><br>
         Modifié le : <?= htmlspecialchars($post->getDateAmended()) ?></p>
 </div><br>
+<div>
+    <h4>Commentaire</h4>
+    <?php
+    foreach ($comments as $comment)
+    {
+    ?>
+        <p><strong><?= htmlspecialchars($comment->getPseudo());?></strong></p>
+        <p><?=htmlspecialchars($comment->getContent());?></p>
+        <p>Posté le <?=htmlspecialchars($comment->getDateAdded());?><br>
+        Modifié le <?= htmlspecialchars($comment->getDateAmended())?></p>
+        <?php
+    }
+    ?>
+</div>
 
 

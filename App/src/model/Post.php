@@ -18,11 +18,6 @@ class Post
     private $date_added;
     private $date_amended;
 
-    public function __construct()
-    {
-        $this->setDateAdded(($dateTime = new \DateTime())->format('d/m/Y H:i'));
-    }
-
     /**
      * @return mixed
      */

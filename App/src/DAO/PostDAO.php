@@ -19,7 +19,6 @@ class PostDAO extends DAO
             $postId = $row['id'];
             $posts[$postId] = $this->buildObject($row);
         }
-
         return $posts;
     }
 
@@ -36,7 +35,7 @@ class PostDAO extends DAO
         }
     }
 
-    public function buildObject($data)
+    public function buildObject(array $data)
     {
         $post = new Post();
         $post->setId($data['id'] ?? null);
@@ -44,6 +43,11 @@ class PostDAO extends DAO
         $post->setChapo($data['chapo'] ?? null);
         $post->setContent($data['content'] ?? null);
         $post->setAuthor($data['author'] ?? null);
+        if (isset($data['date_added'])) {
+            $post->setDateAdded($data['date_added'] ?? null);
+        } else {
+            $post->setDateAdded(($dateTime = new \DateTime())->format('d/m/Y H:i'));
+        }
         $post->setDateAmended($data['date_amended'] ?? null);
         return $post;
     }

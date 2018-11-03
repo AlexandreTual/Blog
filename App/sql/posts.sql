@@ -1,6 +1,7 @@
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
+  `chapo` varchar(255) NOT NULL,
   `content` text NOT NULL,
   `author` varchar(100) NOT NULL,
   `date_added` datetime NOT NULL,
