@@ -12,6 +12,7 @@ $this->title = 'Post';
 <h1>Mon blog</h1>
 <div>
     <h2><?= htmlspecialchars($post->getTitle());?></h2>
+    <h5><?= htmlspecialchars($post->getChapo());?></h5>
     <p><?= htmlspecialchars($post->getContent());?></p>
     <p><strong><?= htmlspecialchars($post->getAuthor());?></strong></p>
     <p>Crée le : <?= htmlspecialchars($post->getDateAdded());?><br>

@@ -12,6 +12,7 @@ class Post
 {
     private $id;
     private $title;
+    private $chapo;
     private $content;
     private $author;
     private $date_added;
@@ -54,7 +55,29 @@ class Post
      */
     public function setTitle($title)
     {
-        $this->title = (string) $title;
+        if (is_string($title)) {
+            $this->title = $title;
+        }
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getChapo()
+    {
+        return $this->chapo;
+    }
+
+    /**
+     * @param mixed $chapo
+     * @return Post
+     */
+    public function setChapo($chapo)
+    {
+        if (is_string($chapo)) {
+            $this->chapo = $chapo;
+        }
         return $this;
     }
 
@@ -72,7 +95,9 @@ class Post
      */
     public function setContent($content)
     {
-        $this->content = (string) $content;
+        if (is_string($content)) {
+            $this->content = $content;
+        }
         return $this;
     }
 
@@ -90,7 +115,9 @@ class Post
      */
     public function setAuthor($author)
     {
-        $this->author = (string) $author;
+        if (is_string($author)) {
+        $this->author = $author;
+        }
         return $this;
     }
 
@@ -108,7 +135,9 @@ class Post
      */
     public function setDateAdded($date_added)
     {
-        $this->date_added = $date_added;
+        if (is_string($date_added)) {
+            $this->date_added = $date_added;
+        }
         return $this;
     }
 
@@ -126,7 +155,9 @@ class Post
      */
     public function setDateAmended($date_amended)
     {
-        $this->date_amended = $date_amended;
+        if (is_string($date_amended)) {
+            $this->date_amended = $date_amended;
+        }
         return $this;
     }
 
