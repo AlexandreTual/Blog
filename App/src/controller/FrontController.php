@@ -8,18 +8,21 @@
 
 namespace App\src\controller;
 
+use App\src\DAO\CommentDAO;
 use \App\src\DAO\PostDAO;
 use \App\src\model\View;
 
 class FrontController
 {
-    private $postDAO;
     private $view;
+    private $postDAO;
+    private $commentDAO;
 
     public function __construct()
     {
         $this->postDAO = new PostDAO();
         $this->view = new View();
+        $this->commentDAO = new CommentDAO();
     }
 
 
@@ -32,8 +35,10 @@ class FrontController
     public function post($id)
     {
         $post = $this->postDAO->getPost($id);
+        $comments = $this->commentDAO->getCommentFromPost($id);
         $this->view->render('single', [
             'post' => $post,
+            'comments' => $comments
         ]);
     }
 
