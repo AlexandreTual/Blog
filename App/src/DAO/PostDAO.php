@@ -19,6 +19,7 @@ class PostDAO extends DAO
             $postId = $row['id'];
             $posts[$postId] = $this->buildObject($row);
         }
+
         return $posts;
     }
 
@@ -40,6 +41,7 @@ class PostDAO extends DAO
         $post = new Post();
         $post->setId($data['id'] ?? null);
         $post->setTitle($data['title'] ?? null);
+        $post->setChapo($data['chapo'] ?? null);
         $post->setContent($data['content'] ?? null);
         $post->setAuthor($data['author'] ?? null);
         $post->setDateAmended($data['date_amended'] ?? null);
