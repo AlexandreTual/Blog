@@ -19,8 +19,8 @@ class ErrorController
         $this->view = new View();
     }
 
-    public function error() {
-        $this->view->render('error');
+    public function error($e) {
+        $this->view->render('error', ['e' => $e]);
     }
 
     public function unknown() {

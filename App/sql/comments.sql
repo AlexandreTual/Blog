@@ -7,7 +7,7 @@ CREATE TABLE `comment` (
   `article_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `comment` (`id`, `pseudo`, `content`, `date_added`, post_id) VALUES
+INSERT INTO `comment` (`id`, username, `content`, `date_added`, post_id) VALUES
 (1, 'Jean', 'Génial, hâte de voir ce que ça donne !', '2018-01-10', 1),
 (2, 'Nina', 'Trop cool ! depuis le temps', '2018-01-11', 1),
 (3, 'Rodrigo', 'Great ! ', '2018-01-12', 1),

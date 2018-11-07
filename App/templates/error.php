@@ -8,4 +8,4 @@
 
 $this->title = 'error';
 
-echo 'Erreur';
+echo $e->getmessage();

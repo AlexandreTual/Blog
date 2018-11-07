@@ -6,10 +6,12 @@ namespace App\src\model;
 class Comment
 {
     private $id;
-    private $pseudo;
+    private $username;
     private $content;
     private $dateAdded;
     private $dateAmended;
+    private $postId;
+    private $userId;
 
     /**
      * @return mixed
@@ -32,20 +34,20 @@ class Comment
     /**
      * @return mixed
      */
-    public function getPseudo()
+    public function getUsername()
     {
-        return $this->pseudo;
+        return $this->username;
     }
 
     /**
-     * @param mixed $pseudo
+     * @param mixed $username
      * @return Comment
      */
-    public function setPseudo($pseudo)
+    public function setUsername($username)
     {
-        if (is_string($pseudo)) {
-            if (strlen($pseudo) > 0 && strlen($pseudo) < 30) {
-                $this->pseudo = $pseudo;
+        if (is_string($username)) {
+            if (strlen($username) > 0 && strlen($username) < 30) {
+                $this->username = $username;
             }
         }
         return $this;
@@ -110,6 +112,45 @@ class Comment
         }
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPostId()
+    {
+        return $this->postId;
+    }
+
+    /**
+     * @param mixed $postId
+     * @return Comment
+     */
+    public function setPostId($postId)
+    {
+        $this->postId = (int) $postId;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param mixed $userId
+     * @return Comment
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = (int) $userId;
+        return $this;
+    }
+
+
+
 
 
 }

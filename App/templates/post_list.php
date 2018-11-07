@@ -6,7 +6,6 @@
  * Time: 17:21
  */
 
-session_start();
 $this->title = 'PostsList';
 ?>
     <h1>Mon blog</h1>
