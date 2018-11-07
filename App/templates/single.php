@@ -25,7 +25,15 @@ Utils::echoFlashBag('message');
 <div>
     <h4>Commentaires</h4>
     <?php
-
+    if (isset($_SESSION['userId']) && (is_int($_SESSION['userId']) > 0)) {
+        $form = new BootstrapForm($_POST);
+        ?>
+        <form action="index.php?p=add-comment&idArt=<?=$post->getId()?>" method="post">
+            <?=$form->input('Nouveau commentaire', 'content', ['type' => 'textarea']);?>
+            <?=$form->submit('Soumettre');?>
+        </form>
+        <?php
+    }
 
 
     foreach ($comments as $comment)
@@ -35,7 +43,11 @@ Utils::echoFlashBag('message');
         <p><?=htmlspecialchars($comment->getContent());?></p>
         <p>Posté le : <?=htmlspecialchars($comment->getDateAdded());?><br>
         Modifié le :<?= htmlspecialchars($comment->getDateAmended())?><br><?php
-
+        if(($_SESSION['userId'] === $comment->getUserId()) OR $_SESSION['is_admin'] === 1) {?>
+            <a href="index.php?p=delete-comment&idArt=<?=$comment->getPostId()?>&idComment=<?=$comment->getId()?>">Supprimer</a>
+            <a href="index.php?p=update-comment&idArt=<?=$comment->getPostId()?>&idComment=<?=$comment->getId()?>">Modifier</a></p>
+            <?php
+        }
 
     }
     ?>

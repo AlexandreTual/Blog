@@ -54,7 +54,18 @@ class Router
                 case 'logout':
                     $this->frontController->logout();
                     break;
-
+                case 'admin':
+                    $this->backController->getAdmin();
+                    break;
+                case'add-comment':
+                    $this->frontController->addComment($_POST, $_GET['idArt'], $_SESSION['userId']);
+                    break;
+                case 'delete-comment':
+                    $this->frontController->deleteComment($_GET['idArt'], $_GET['idComment'], $_SESSION['userId']);
+                    break;
+                case 'update-comment':
+                    $this->frontController->updateComment($_GET['idArt'], $_GET['idComment'], $_SESSION['userId'], $_POST);
+                    break;
                 default:
                     $this->errorController->unknown();
             }
