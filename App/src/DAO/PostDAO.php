@@ -35,7 +35,7 @@ class PostDAO extends DAO
         }
     }
 
-    public function buildObject(array $data)
+    public function buildObject(array $data): Post
     {
         $post = new Post();
         $post->setId($data['id'] ?? null);

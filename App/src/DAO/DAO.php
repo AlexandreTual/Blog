@@ -16,7 +16,7 @@ abstract class DAO
 {
     private $db;
 
-    protected function checkConnection()
+    public function checkConnection()
     {
         //Vérifie si la connexion est null et fait appel à getDB()
         if ($this->db === null) {
@@ -34,6 +34,7 @@ abstract class DAO
             $config = Config::getInstance(ROOT . '/config/dev.php');
             $db_instance = new PDO('mysql:host=' . $config->get('db_host') . ';dbname=' . $config->get('db_name') .
                 ';charset=' . $config->get('db_charset'), $config->get('db_user'), $config->get('db_pass'));
+            $db_instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $db_instance;
 
         } // si echec on lève une erreur.

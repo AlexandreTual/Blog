@@ -8,6 +8,7 @@
 
 namespace App\config;
 
+use App\src\controller\BackController;
 use App\src\controller\FrontController;
 use App\src\controller\ErrorController;
 
@@ -17,12 +18,14 @@ class Router
 {
     private $frontController;
     private $errorController;
+    private $backController;
 
 
     public function __construct()
     {
         $this->frontController = new FrontController();
         $this->errorController = new ErrorController();
+        $this->backController = new BackController();
     }
 
 
@@ -32,21 +35,31 @@ class Router
             if (isset($_GET['p'])) {
                 $page = $_GET['p'];
             } else {
-                $page = 'listPost';
+                $page = 'home';
             }
 
             switch ($page) {
-                case 'listPost':
+                case 'home':
+                    $this->frontController->home();
+                    break;
+                case 'post-list':
                     $this->frontController->getPostList();
                     break;
                 case 'post':
                     $this->frontController->post($_GET['idArt']);
                     break;
+                case 'login':
+                    $this->frontController->login($_POST);
+                    break;
+                case 'logout':
+                    $this->frontController->logout();
+                    break;
+
                 default:
                     $this->errorController->unknown();
             }
         } catch (Exception $e) {
-            $this->errorController->error();
+            $this->errorController->error($e);
         }
     }
 }
