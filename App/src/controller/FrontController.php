@@ -72,4 +72,91 @@ class FrontController
         header('Location: index.php');
     }
 
+    public function Comment($idComment)
+    {
+        $idComment = (int) $idComment;
+        $comment = $this->commentDAO->getComment($idComment);
+        return $comment;
+    }
+
+    public function addComment($comment, $idArt, $userId)
+    {
+        $idArt = (int) $idArt;
+        // insertion des différentes variables dans la bdd
+        $insert = $this->commentDAO->add($comment , $idArt, $userId);
+
+        // message mis en cache pour lecture sur le template
+        $successM = 'Le commentaire à bien été ajouté';
+        $errorM = 'Une erreur c\'est produite lors de l\'ajout du commentaire';
+        $message = Utils::messageAlert($insert, $successM, $errorM);
+        Utils::addFlashBag('message', $message);
+        header('Location: index.php?p=post&idArt='.$idArt);
+    }
+
+    public function deleteComment($idArt, $idComment, $idUser)
+    {
+        // caster les variables pour être sur d'avoir des entiers.
+        $idArt = (int) $idArt;
+        $idComment = (int) $idComment;
+        $idUser = (int) $idUser;
+
+        /*récupération du commentaire , pour comparer les userid.
+        si les id correspondent on supprime le commentaire.*/
+        $comment = $this->commentDAO->getComment($idComment);
+        if (isset($idUser)) {
+            if ($idUser === $comment->getUserId() OR $_SESSION['is_admin'] === 1) {
+                $this->commentDAO->delete($idComment);
+
+                // message mis en cache pour lecture sur le template
+                $sucessM = 'Le commentaire à bien été supprimé';
+                $errorM = 'Un problème est survenu lors de la suppression du commentaire.';
+                $message = Utils::messageAlert(true, $sucessM, $errorM);
+                Utils::addFlashBag('message', $message);
+            } else {
+                // message mis en cache pour lecture sur le template
+                $errorM = 'Vous n\'avez pas le droit de supprimer ce commentaire.';
+                $message = Utils::messageAlert(false , null, $errorM);
+                Utils::addFlashBag('message', $message);
+            }
+        }
+        header('Location: index.php?p=post&idArt='.$idArt);
+    }
+
+    public function updateComment($idArt, $idComment, $idUser, $commentPost)
+    {
+        // caster les variables pour être sur d'avoir des entiers.
+        $idArt = (int) $idArt;
+        $idComment = (int) $idComment;
+        $idUser = (int) $idUser;
+
+
+        //récupération du commentaire pour comparer les userId
+        $comment = $this->commentDAO->getComment($idComment);
+
+        if (($idUser === $comment->getUserId()) OR $_SESSION['is_admin'] === 1) {
+
+            /* on compare les id
+             si pas de submit on appel le template pour modifier le commentaire*/
+            $this->view->render('update_comment', ['comment' => $comment]);
+
+            if (isset($commentPost['submit'])) {
+                // si présence du submit on enregistre en bdd.
+                $update = $this->commentDAO->update($commentPost, $idComment);
+
+                // message en fonction de la réussite de $update, mis en cache pour lecture sur le template.
+                $sucessM = 'Le commentaire à bien été modifié';
+                $errorM = 'Un problème est survenu lors de la modification du commentaire.';
+                $message = Utils::messageAlert($update, $sucessM, $errorM);
+                Utils::addFlashBag('message', $message);
+                header('Location: index.php?p=post&idArt='.$idArt);
+            }
+        } else {
+            // message mis en cache pour lecture sur le template
+            $errorM = 'Vous n\'avez pas le droit de modifier ce commentaire.';
+            $message = Utils::messageAlert(false, null, $errorM);
+            Utils::addFlashBag('message', $message);
+            header('Location: index.php?p=post&idArt='.$idArt);
+        }
+    }
+
 }
