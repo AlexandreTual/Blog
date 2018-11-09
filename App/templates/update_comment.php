@@ -15,10 +15,11 @@ $form = new BootstrapForm($_POST);
 
 <p><?=htmlspecialchars($comment->getContent());?></p>
 <p>Posté le : <?=htmlspecialchars($comment->getDateAdded());?><br>
+
     Modifié le :<?= htmlspecialchars($comment->getDateAmended())?><br>
 
 <form action="index.php?p=update-comment&idArt=<?=$comment->getPostId()?>&idComment=<?=$comment->getId()?>" method="post">
-    <?= $form->input('Contenu à modifier', 'content', ['type' => 'textarea'], true, htmlspecialchars($comment->getContent())) ?>
+    <?= $form->input('Contenu à modifier', 'content', ['type' => 'textarea'], true, htmlspecialchars($comment->getContent()), true) ?>
     <?= $form->submit('Soumettre')?>
 </form>
 

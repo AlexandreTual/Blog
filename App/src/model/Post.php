@@ -17,6 +17,8 @@ class Post
     private $author;
     private $date_added;
     private $date_amended;
+    private $publish;
+    private $comment_number;
 
     /**
      * @return mixed
@@ -155,6 +157,27 @@ class Post
         }
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPublish()
+    {
+        return $this->publish;
+    }
+
+    /**
+     * @param mixed $publish
+     * @return Post
+     */
+    public function setPublish($publish)
+    {
+        $this->publish = $publish;
+        return $this;
+    }
+
+
+
 
 
 }

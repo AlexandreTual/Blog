@@ -66,6 +66,19 @@ class Router
                 case 'update-comment':
                     $this->frontController->updateComment($_GET['idArt'], $_GET['idComment'], $_SESSION['userId'], $_POST);
                     break;
+                case'add-post':
+                    $this->backController->addPost($_POST);
+                    break;
+                case 'update-post':
+                    $this->backController->updatePost($_GET['idArt'], $_POST);
+                    break;
+                case 'delete-post':
+                    $this->backController->deletePost($_GET['idArt']);
+                    break;
+                case'publish-post':
+                    $this->backController->updatePost($_GET['idArt'], $_POST, $_GET['publish']);
+                    break;
+                case'button-tag':
                 default:
                     $this->errorController->unknown();
             }

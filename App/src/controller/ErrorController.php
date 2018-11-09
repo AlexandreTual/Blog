@@ -9,6 +9,7 @@
 namespace App\src\controller;
 
 use App\src\model\View;
+use App\Core\Utils;
 
 class ErrorController
 {
@@ -24,6 +25,11 @@ class ErrorController
     }
 
     public function unknown() {
-        $this->view->render('unknown');
+        $errorM = 'page inconnu !';
+        $successM = null;
+        $message = Utils::messageAlert(false, $successM, $errorM);
+        Utils::addFlashBag('message', $message);
+        header('Location : index.php');
+
     }
 }

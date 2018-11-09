@@ -52,12 +52,12 @@ abstract class Utils
     public static function addFlashBag($key, $value = true) {
 
         $_SESSION['flashbag'][$key] = $value;
-
     }
 
     public static function echoFlashBag($key)
     {
         $message = Utils::getFlashBag($key);
+
         if(!empty($message)){
             echo $message;
         }
@@ -79,23 +79,39 @@ abstract class Utils
         return false;
     }
 
-    /*public static function  dropdown($label)
+    public static function checkField(array $keys, array $data)
     {
-        $drop = '<div class="input-group">
-                  <input type="text" class="form-control" aria-label="Text input with dropdown button">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'. $label .'</button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                      <div role="separator" class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Separated link</a>
-                    </div>
-                  </div>
-                 </div>';
-        return $drop;
-    }*/
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $data) || !isset($data[$key]) || empty($data[$key])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static function isUser()
+    {
+        if (isset($_SESSION['userId'])) {
+            return true;
+        } else {
+            $errorM = 'Accès refusé ! Mais n\'hésitez pas à vous connecter';
+            $message = Utils::messageAlert(false, null, $errorM);
+            Utils::addFlashBag('message', $message);
+            header('Location: index.php?p=login');
+        }
+    }
+
+    public static function isAdmin()
+    {
+        if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
+            return true;
+        } else {
+            $errorM = 'Accès refusé !';
+            $message = Utils::messageAlert(false, null, $errorM);
+            Utils::addFlashBag('message', $message);
+            header('Location: index.php');
+        }
+    }
 
 
 
