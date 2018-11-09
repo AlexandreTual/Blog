@@ -19,12 +19,17 @@
 
 <!-- Bootstrap core CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js">
 </head>
 
 <body>
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="index.php">Navbar</a>
+    <a class="navbar-brand" href="index.php">home</a>
+    <a class="navbar-brand" href="index.php?p=post-list">blog</a><?php
+    if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1) {
+        echo '<a class="navbar-brand" href="index.php?p=admin">Administration</a><br>';
+    }?>
     <div class="navbar-form navbar-right inline-form">
 
         <?php if (isset($_SESSION['userId'])) {

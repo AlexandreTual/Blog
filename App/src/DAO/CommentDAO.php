@@ -41,6 +41,16 @@ class CommentDAO extends DAO
         return $this->buildObject($row);
     }
 
+    public function countByPost($post_id)
+    {
+        $sql = "SELECT COUNT(*) FROM comment WHERE post_id = :post_id";
+        $req = $this->checkConnection()->prepare($sql);
+        $req->bindValue(':post_id', $post_id, \PDO::PARAM_INT);
+        $req->execute();
+        return $data = $req->fetch();
+
+    }
+
 
     public function add($comment, $idArt, $userId)
     {
@@ -73,14 +83,13 @@ class CommentDAO extends DAO
         return $req->execute();
     }
 
-
     public function buildObject(array $data, $update = false): Comment
     {
         $comment = new Comment();
         $comment->setId($data['id'] ?? null);
         $comment->setUsername($data['username'] ?? null);
         $comment->setContent($data['content'] ?? null);
-        if (isset($data['date_added']) OR $update === true) {
+        if (isset($data['date_added']) || $update === true) {
             $comment->setDateAdded($data['date_added'] ?? null);
         } else {
             $comment->setDateAdded(($dateTime = new \DateTime())->format('Y:m:d H:i:s'));

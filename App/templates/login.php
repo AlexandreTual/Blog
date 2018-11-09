@@ -11,7 +11,7 @@ use App\Core\Utils;
 $form = new BootstrapForm($_POST);
 Utils::echoFlashBag('message');
 ?>
-<h1>Authentification</h1>
+<div class="text-center"><h1>Authentification</h1></div>
 
 <form action="../public/index.php?p=login" method="post">
         <?= $form->input('Utilisateur', 'username')?>

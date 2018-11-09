@@ -11,9 +11,12 @@ use App\src\model\Post;
 
 class PostDAO extends DAO
 {
-    public function getAll() {
-        $sql = "SELECT * FROM posts ORDER BY id DESC";
-        $result = $this->checkConnection()->query($sql);
+    public function getAll($publish) {
+        $sql = "SELECT * FROM posts WHERE publish <> :publish ORDER BY id DESC";
+        $req = $this->checkConnection()->prepare($sql);
+        $req->bindValue(':publish', $publish, \PDO::PARAM_INT);
+        $req->execute();
+        $result = $req->fetchall();
         $posts = [];
         foreach ($result as $row) {
             $postId = $row['id'];
@@ -35,7 +38,65 @@ class PostDAO extends DAO
         }
     }
 
-    public function buildObject(array $data): Post
+    public function add($post)
+    {
+        $post = $this->buildObject($post);
+
+        $sql = 'INSERT INTO posts (title, chapo, content, author, date_added) 
+                VALUES (:title, :chapo, :content, :author, :date_added)';
+        $req = $this->checkConnection()->prepare($sql);
+        $req->bindValue(':title', $post->getTitle(), \PDO::PARAM_STR);
+        $req->bindValue(':chapo', $post->getChapo(), \PDO::PARAM_STR);
+        $req->bindValue(':content', $post->getContent(), \PDO::PARAM_STR);
+        $req->bindValue(':author', $post->getAuthor(), \PDO::PARAM_STR);
+        $req->bindValue(':date_added', $post->getDateAdded(), \PDO::PARAM_STR);
+        $req->execute();
+        return $this->checkConnection()->lastInsertId();
+    }
+
+    public function update($id, $post, $publish = null)
+    {
+        if (isset($post)) {
+            $post = $this->buildObject($post, true);
+        }
+
+        if (isset($publish)) {
+            // requète permettant de modifier l'etat de publication.
+            $sql = 'UPDATE posts SET publish= :publish WHERE id = :id';
+
+            $req = $this->checkConnection()->prepare($sql);
+            $req->bindValue(':publish', $publish, \PDO::PARAM_STR);
+            $req->bindValue(':id', $id, \PDO::PARAM_INT);
+            return $req->execute();
+        } else {
+            // requète permettant de modifier le contenu de l'article.
+            $sql = 'UPDATE posts 
+                SET title = :title, chapo = :chapo, content = :content, author = :author, date_amended = :date_amended 
+                WHERE id = :id';
+            $req = $this->checkConnection()->prepare($sql);
+            $req->bindValue(':title', $post->getTitle(), \PDO::PARAM_STR);
+            $req->bindValue(':chapo', $post->getChapo(), \PDO::PARAM_STR);
+            $req->bindValue(':content', $post->getContent(), \PDO::PARAM_STR);
+            $req->bindValue(':author', $post->getAuthor(), \PDO::PARAM_STR);
+            $req->bindValue(':date_amended', $post->getDateAmended(), \PDO::PARAM_STR);
+            $req->bindValue(':id', $id, \PDO::PARAM_INT);
+            return $req->execute();
+        }
+        // on execute l'une ou l'autre des requète en fonction du paramètre publish et on retourne l'id de larticle.
+
+    }
+
+    public function delete($id)
+    {
+        $sql = 'DELETE FROM posts WHERE id = :id';
+        $req = $this->checkConnection()->prepare($sql);
+        $req->bindValue(':id', $id, \PDO::PARAM_INT);
+        return $post = $req->execute();
+    }
+
+
+
+    public function buildObject(array $data, $updateContent = false): Post
     {
         $post = new Post();
         $post->setId($data['id'] ?? null);
@@ -43,12 +104,18 @@ class PostDAO extends DAO
         $post->setChapo($data['chapo'] ?? null);
         $post->setContent($data['content'] ?? null);
         $post->setAuthor($data['author'] ?? null);
-        if (isset($data['date_added'])) {
+        if (isset($data['date_added']) OR $updateContent === true) {
             $post->setDateAdded($data['date_added'] ?? null);
         } else {
-            $post->setDateAdded(($dateTime = new \DateTime())->format('d/m/Y H:i'));
+            $post->setDateAdded(($dateTime = new \DateTime())->format('Y:m:d H:i:s'));
         }
-        $post->setDateAmended($data['date_amended'] ?? null);
+        // si $update vaut true on set avec DateTime sinon on set avec les $data
+        if ($updateContent === true) {
+            $post->setDateAmended(($dateTime = new \DateTime())->format('Y:m:d H:i:s'));
+        } else {
+            $post->setDateAmended($data['date_amended'] ?? null);
+        }
+        $post->setPublish($data['publish'] ?? null);
         return $post;
     }
 }
