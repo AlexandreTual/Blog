@@ -113,6 +113,35 @@ abstract class Utils
         }
     }
 
+    public static function LastUrl()
+    {
+        $p = $_REQUEST;
+        $url ='';
+        foreach ($p as $k => $v) {
+            $url .=  $k.'='.$v.'&';
+        }
+        return $url;
+
+    }
+
+    public static function actionRefused()
+    {
+        $errorM = 'Cette action n\'est pas possible, vous avez été redirigez vers la page d\'accueil !';
+        $message = Utils::messageAlert(false, null, $errorM);
+        Utils::addFlashBag('message', $message);
+        header('Location: index.php');
+    }
+
+    public static function postWaiting()
+    {
+        $errorM = 'Cet article n\'est pas disponible, mais n\'hésitez pas à lire nos autres articles !';
+        $message = Utils::messageAlert(false, null, $errorM);
+        Utils::addFlashBag('message', $message);
+        header('Location: index.php?p=post-list');
+    }
+
+
+
 
 
 

@@ -11,10 +11,13 @@ use App\src\model\Post;
 
 class PostDAO extends DAO
 {
-    public function getAll($publish) {
-        $sql = "SELECT * FROM posts WHERE publish <> :publish ORDER BY id DESC";
+    public function getAll($publish, $comments_number = false) {
+        $sql = "
+          SELECT p.id, p.title, p.chapo, p.content, p.author, p.date_added, p.date_amended, p.publish
+          ".($comments_number ? ", (SELECT COUNT(c.id) FROM comment as c WHERE c.post_id = p.id) as comment_count" : "")."  
+          FROM posts as p WHERE p.publish <> :publish ORDER BY p.id DESC";
         $req = $this->checkConnection()->prepare($sql);
-        $req->bindValue(':publish', $publish, \PDO::PARAM_INT);
+        $req->bindValue(':publish', $publish, \PDO::PARAM_STR);
         $req->execute();
         $result = $req->fetchall();
         $posts = [];
@@ -33,9 +36,9 @@ class PostDAO extends DAO
         $result->execute();
         if ($row = $result->fetch()) {
             return $this->buildObject($row);
-        } else {
+        } /*else {
             return $message =  'Aucun article existant avec cet identifiant';
-        }
+        }*/
     }
 
     public function add($post)
@@ -116,6 +119,8 @@ class PostDAO extends DAO
             $post->setDateAmended($data['date_amended'] ?? null);
         }
         $post->setPublish($data['publish'] ?? null);
+        $post->setCommentsStatusNumber($data['comment_count'] ?? null);
+
         return $post;
     }
 }

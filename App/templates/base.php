@@ -18,8 +18,7 @@
     <title><?= $title ?></title>
 
 <!-- Bootstrap core CSS -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js">
+<link href="../../vendor/twitter/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -45,6 +44,16 @@
 <div id="content" class="container" style="padding-top: 100px;">
     <?= $content ?>
 </div>
+
+<script src="../../vendor/components/jquery/jquery.min.js"></script>
+<script src="../../vendor/twitter/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../vendor/tinymce/tinymce/tinymce.min.js"></script>
+<script src="../../vendor/ckeditor/ckeditor/ckeditor.js"></script>
+<script>tinymce.init({ selector:'textarea[tinymce]' });</script>
+<script>CKEDITOR.replace( 'chapoPost' );</script>
+<script>CKEDITOR.replace( 'contentPost' );</script>
+
+
 
 </body>
 </html>

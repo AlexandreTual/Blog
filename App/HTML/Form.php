@@ -49,6 +49,8 @@ class Form {
         return $this->surround('<input type="' . $type . '" name="' . $name . '" value="' . $this->getValue($name) .'">');
     }
 
+
+
     /**
      * @return string champ submit de formulaire
      */

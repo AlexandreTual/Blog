@@ -25,8 +25,9 @@ class BackController
     public function getAdmin()
     {
         if (Utils::isAdmin()) {
-            $posts = $this->postDAO->getAll(3);
-            $this->view->render('admin', ['posts' => $posts]);
+            $posts = $this->postDAO->getAll('all', true);
+            $comments = $this->commentDAO->getComments('waiting');
+            $this->view->render('admin', ['posts' => $posts, 'comments' => $comments]);
         } else {
             header('Location: index.php');
         }
@@ -78,7 +79,6 @@ class BackController
                     $errorM = 'Veuillez remplir tout les champs du formulaire !';
                     $successM = null;
                     $message = Utils::messageAlert(false, $successM, $errorM);
-                    var_dump($message);
                     Utils::addFlashBag('message', $message);
                 }
 
@@ -105,6 +105,29 @@ class BackController
             }
         }
     }
+
+    public function GetCommentList()
+    {
+        if (Utils::isAdmin()) {
+            $comments = $this->commentDAO->getComments('waiting');
+            $this->view->render('manage_comment', ['comments' => $comments]);
+        }
+
+    }
+
+    public function publishComment($idComment, $publish)
+    {
+        if (Utils::isAdmin()) {
+            $this->commentDAO->update($idComment, null, $publish);
+
+            $successM = 'Le commentaire vient d\'être publié';
+            $message = Utils::messageAlert(true, $successM, null);
+            Utils::addFlashBag('message', $message);
+            header('Location: index.php?p=manage-comment');
+        }
+    }
+
+
 
 
 

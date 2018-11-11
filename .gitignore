@@ -6,3 +6,5 @@ yarn.lock
 node_modules/
 App/public/css/
 App/public/js/
+composer.lock
+vendor/

@@ -10,14 +10,15 @@ use App\Core\Utils;
 
 $this->title = 'Post';
 Utils::echoFlashBag('message');
+Utils::LastUrl();
 ?>
 
 <div class="text-center"><h1>Article</h1></div>
 
 <div>
     <h2><?= htmlspecialchars(ucfirst($post->getTitle()));?></h2>
-    <h5><?= htmlspecialchars($post->getChapo());?></h5>
-    <p><?= htmlspecialchars($post->getContent());?></p>
+    <h5><?= $post->getChapo();?></h5>
+    <p><?= $post->getContent();?></p>
     <p><strong><?= htmlspecialchars(ucfirst($post->getAuthor()));?></strong></p>
     <p>Crée le : <?= htmlspecialchars($post->getDateAdded());?><br><?php
         if (!empty($post->getDateAmended())) {
