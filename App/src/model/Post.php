@@ -18,7 +18,7 @@ class Post
     private $date_added;
     private $date_amended;
     private $publish;
-    private $comment_number;
+    private $comments_status_number;
 
     /**
      * @return mixed
@@ -175,6 +175,25 @@ class Post
         $this->publish = $publish;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCommentsStatusNumber()
+    {
+        return $this->comments_status_number;
+    }
+
+    /**
+     * @param mixed $comments_status_number
+     * @return Post
+     */
+    public function setCommentsStatusNumber($comments_status_number)
+    {
+        $this->comments_status_number = $comments_status_number;
+        return $this;
+    }
+
 
 
 

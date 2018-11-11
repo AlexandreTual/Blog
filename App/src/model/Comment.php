@@ -12,6 +12,7 @@ class Comment
     private $dateAmended;
     private $postId;
     private $userId;
+    private $publish;
 
     /**
      * @return mixed
@@ -148,5 +149,25 @@ class Comment
         $this->userId = (int) $userId;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPublish()
+    {
+        return $this->publish;
+    }
+
+    /**
+     * @param mixed $publish
+     * @return Comment
+     */
+    public function setPublish($publish)
+    {
+        $this->publish = $publish;
+        return $this;
+    }
+
+
 
 }

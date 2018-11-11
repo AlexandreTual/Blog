@@ -29,7 +29,7 @@ class ErrorController
         $successM = null;
         $message = Utils::messageAlert(false, $successM, $errorM);
         Utils::addFlashBag('message', $message);
-        header('Location : index.php');
+        header('Location: index.php');
 
     }
 }

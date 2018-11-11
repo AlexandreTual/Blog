@@ -1,1 +1,10 @@
 .idea/
+composer.json
+composer.phar
+package.json
+yarn.lock
+node_modules/
+App/public/css/
+App/public/js/
+composer.lock
+vendor/

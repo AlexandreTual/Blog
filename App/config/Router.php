@@ -61,10 +61,13 @@ class Router
                     $this->frontController->addComment($_POST, $_GET['idArt'], $_SESSION['userId']);
                     break;
                 case 'delete-comment':
-                    $this->frontController->deleteComment($_GET['idArt'], $_GET['idComment'], $_SESSION['userId']);
+                    $this->frontController->deleteComment($_GET['idArt'], $_GET['idComment']);
                     break;
                 case 'update-comment':
-                    $this->frontController->updateComment($_GET['idArt'], $_GET['idComment'], $_SESSION['userId'], $_POST);
+                    $this->frontController->updateComment($_GET['idComment'],$_GET['idArt'], $_POST);
+                    break;
+                case 'manage-comment':
+                    $this->backController->GetCommentList();
                     break;
                 case'add-post':
                     $this->backController->addPost($_POST);
@@ -78,7 +81,9 @@ class Router
                 case'publish-post':
                     $this->backController->updatePost($_GET['idArt'], $_POST, $_GET['publish']);
                     break;
-                case'button-tag':
+                case'publish-comment':
+                    $this->backController->publishComment($_GET['idComment'], $_GET['publish']);
+                    break;
                 default:
                     $this->errorController->unknown();
             }
