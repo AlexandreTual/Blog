@@ -47,12 +47,9 @@
 
 <script src="../../vendor/components/jquery/jquery.min.js"></script>
 <script src="../../vendor/twitter/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../../vendor/tinymce/tinymce/tinymce.min.js"></script>
 <script src="../../vendor/ckeditor/ckeditor/ckeditor.js"></script>
-<script>tinymce.init({ selector:'textarea[tinymce]' });</script>
 <script>CKEDITOR.replace( 'chapoPost' );</script>
 <script>CKEDITOR.replace( 'contentPost' );</script>
-
 
 
 </body>

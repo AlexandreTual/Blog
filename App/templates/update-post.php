@@ -16,8 +16,8 @@ Utils::echoFlashBag('message');
 
 <form action="index.php?p=update-post&idArt=<?=$post->getId()?>" method="post">
     <?=$form->input('Titre', 'title', ['type' => 'text'], true, $post->getTitle(), true)?>
-    <?=$form->input('Chapô', 'chapo', ['type' => 'textarea'],true, $post->getChapo(), true, null, 'tinymce')?>
-    <?=$form->input('Contenu de l\'article', 'content', ['type' => 'textarea'], true, $post->getContent(),true,7, 'tinymce')?>
+    <?=$form->input('Chapô', 'chapo', ['type' => 'textarea'],true, $post->getChapo(), true, null, null, 'chapoPost')?>
+    <?=$form->input('Contenu de l\'article', 'content', ['type' => 'textarea'], true, $post->getContent(),true,7, null, 'contentPost')?>
     <?=$form->input('Auteur', 'author', ['type' => 'text'],true, $post->getAuthor(), true)?>
     <?=$form->submit('Valider')?>
 </form>

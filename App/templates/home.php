@@ -10,5 +10,4 @@ Utils::echoFlashBag('message');
 $this->title = 'Page d\'accueil';
 ?>
 
-<h1>Page d'accueil</h1>
-
+<h1>Page d'accueil</h1

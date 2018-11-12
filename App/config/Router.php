@@ -82,7 +82,11 @@ class Router
                     $this->backController->updatePost($_GET['idArt'], $_POST, $_GET['publish']);
                     break;
                 case'publish-comment':
+
                     $this->backController->publishComment($_GET['idComment'], $_GET['publish']);
+                    break;
+                case'registration':
+                    $this->backController->registration($_POST, $_GET['userId'], $_GET['activ']);
                     break;
                 default:
                     $this->errorController->unknown();
