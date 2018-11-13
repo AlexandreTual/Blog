@@ -2,8 +2,10 @@
 namespace App\src\controller;
 
 use App\src\DAO\PostDAO;
+use App\src\model\User;
 use App\src\model\View;
 use App\src\DAO\CommentDAO;
+use App\src\DAO\UserDAO;
 use App\Core\Utils;
 
 
@@ -12,14 +14,14 @@ class BackController
     private $view;
     private $postDAO;
     private $commentDAO;
+    private $userDAO;
 
     public function __construct()
     {
         $this->view = new View();
         $this->postDAO = new PostDAO();
         $this->commentDAO = new CommentDAO();
-
-
+        $this->userDAO = new UserDAO();
     }
 
     public function getAdmin()
@@ -125,6 +127,73 @@ class BackController
             Utils::addFlashBag('message', $message);
             header('Location: index.php?p=manage-comment');
         }
+    }
+
+    public function registration($post, $userId = null, $activ = null)
+    {
+        if (isset($post['submit'])) {
+            // vérification de la présente de tout les champs attendus.
+            if (Utils::checkField(['username','email', 'password', 'password2'],$post)) {
+                $username = $post['username'];
+                $email = $post['email'];
+                $pass1 = $post['password'];
+                $pass2 = $post['password2'];
+
+                // vérification de l'absence du nom d'utilisateur dans la bdd.
+                if (!$this->userDAO->getUser(null,$username)) {
+                    // vérification de la validité de l'adresse mail.
+                    if ((filter_var($email, FILTER_VALIDATE_EMAIL)) && (!$this->userDAO->getUser(null, null, $email))) {
+                        // vérification de la longeur du mot de passe.
+                            if (strlen($pass1) >= 6) {
+                                // vérification de l'égalité des mots de passe.
+                                if ($pass1 === $pass2) {
+                                    // création d'un code unique afin de valider le compte par la suite
+                                    $status = uniqid();
+                                    // cryptage du mot de passe
+                                    $password = sha1($pass1);
+                                    // insertion des données dans la bdd.
+                                    $newUser = $this->userDAO->add($username, $email, $password, $status);
+                                    $id = $this->userDAO->checkConnection()->lastInsertId();
+                                    if ($newUser) {
+                                        Utils::sendMail('tual.alexandre@gmail.com', $username, $status, $id);
+
+                                        // envoi de l'email contenant le lien de validation de compte.
+
+                                        Utils::messageSuccess('Nous vous remercions de vous être enregistré, un email vous à été envoyé afin de valider votre compte !', 'login');
+                                    } else {
+                                        Utils::messageError('Une erreur c\'est produite lors de l\'enregistrement de votre compte, veuillez réssayer s\'il vous plait !', 'login');
+                                    }
+                                } else {
+                                    Utils::messageError('Les mots de passe ne sont pas identique.', 'login');
+                                }
+                            } else {
+                                Utils::messageError('Votre mot de passe doit contenir au moins 6 caractères !', 'login');
+                            }
+                        } else {
+                            Utils::messageError('L\'adresse mail existe déjà !', 'login');
+                    }
+                } else {
+                    Utils::messageError('le nom d\'utilisateur est déjà pris !', 'login');
+                }
+            } else {
+                Utils::messageError('Veuillez renseigner tout les champs.', 'login');
+            }
+        } elseif (!empty($userId) && !empty($activ)) {
+                $userId = (int) $userId;
+            if ($userId != 0 && is_string($activ)) {
+                $user = $this->userDAO->getUser($userId);
+                if ($user->getStatus() === $activ) {
+                    $this->userDAO->update($user->getId(), 'actif');
+                    Utils::messageSuccess('Félicitation votre compte est actif, vous pouvez vous identifier !', 'login');
+                }
+            }
+        } else {
+            die('lol');
+            $this->view->render('login');
+        }
+
+
+
     }
 
 

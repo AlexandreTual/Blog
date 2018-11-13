@@ -140,6 +140,64 @@ abstract class Utils
         header('Location: index.php?p=post-list');
     }
 
+    public static function messageError($message, $redirection)
+    {
+        $errorM = $message;
+        $message = Utils::messageAlert(false, null, $errorM);
+        Utils::addFlashBag('message', $message);
+        header('Location: index.php?p='.$redirection);
+    }
+
+    public static function messageSuccess($message, $redirection)
+    {
+        $successM = $message;
+        $message = Utils::messageAlert(true, $successM, null);
+        Utils::addFlashBag('message', $message);
+        header('Location: index.php?p='.$redirection);
+    }
+
+    public static function sendMail($recipient, $username, $activationKey, $id)
+    {
+        if (!preg_match("#^[a-z0-9._-]+@(hotmail|live|msn).[a-z]{2,4}$#", $recipient)) {
+            $break_line = "\r\n";
+        } else {
+            $break_line = "\n";
+        }
+
+        $message_html = '<html>
+                        <head></head>
+                        <body>
+                        <p>Hey <strong>'. ucfirst($username) .'</strong>,</p>
+                        <p>Nous sommes fier que vous ayez choisi de vous inscrire sur notre blog</p>
+                        <p>Pour activer votre compte, cliquer sur le lien ci-dessous:</p>
+                        <a href="http://localhost/BLog/ProjetBlog/App/public/index.php?p=registration&userId=' . $id . '&activ=' . $activationKey . '">Activation de compte</a>
+                        <p>Vous retrouverez régulièrement des articles traitant de mon parcours en tant developpeur PHP</p>
+                        <p>Cordialement<br>
+                        <em>Le blogggeur</em></p>
+                        </body>
+                        </html>';
+
+        $boundary = "-----=".md5(rand());
+
+        $topic = "hey mon ami !";
+        //Création du header de l'email.
+        $header = "From: \"Tual Alexandre\" <".$recipient.">".$break_line;
+        $header.= "Reply-to: \"Alexandre TUAL\" <tual.alexandre@gmail.com>".$break_line;
+        $header.= "MIME-version: 1.0".$break_line;
+        $header.= "Content-type: multipart/alternative;".$break_line." boundary=\"$boundary\"".$break_line;
+
+        $message = $break_line."--".$boundary.$break_line;
+        //Ajout du message au format HTML.
+        $message .= "Content-Type: text/html; charset=\"ISO-8859-1\"".$break_line;
+        $message .= "Content-Transfer-Encoding: 8bit".$break_line;
+        $message .= $break_line.$message_html.$break_line;
+
+        //On ferme la boundary alternative.
+        $message.=$break_line."--".$boundary."--".$break_line;
+
+        mail($recipient,$topic,$message,$header);
+    }
+
 
 
 

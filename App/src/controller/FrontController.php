@@ -66,13 +66,14 @@ class FrontController
             if (isset($login['submit'])) {
                 if($this->userDAO->getLogin($login['username'], $login['password'])) {
 
+                    Utils::messageSuccess('Bienvenue '.ucfirst($_SESSION['username']). ' !','');
                     $successM = 'Bienvenue '.ucfirst($_SESSION['username']). ' !';
                     $message = Utils::messageAlert(true, $successM , null);
                     Utils::addFlashBag('message', $message);
                     header('Location: index.php');
 
                 } else {
-                    $errorM = 'Identifants incorrect';
+                    $errorM = 'Identifants incorrect ou compte inactif.';
                     $message = Utils::messageAlert(false, null , $errorM);
                     Utils::addFlashBag('message', $message);
                 }

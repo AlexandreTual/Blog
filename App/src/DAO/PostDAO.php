@@ -36,9 +36,7 @@ class PostDAO extends DAO
         $result->execute();
         if ($row = $result->fetch()) {
             return $this->buildObject($row);
-        } /*else {
-            return $message =  'Aucun article existant avec cet identifiant';
-        }*/
+        }
     }
 
     public function add($post)

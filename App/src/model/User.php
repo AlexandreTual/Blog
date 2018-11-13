@@ -12,7 +12,9 @@ class User
     private $id;
     private $username;
     private $password;
+    private $email;
     private $is_admin;
+    private $status;
 
     /**
      * @return mixed
@@ -85,6 +87,44 @@ class User
         $this->is_admin = (int) $is_admin;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     * @return User
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     * @return User
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+
 
 
 }
