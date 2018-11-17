@@ -5,6 +5,7 @@
  * Date: 04/11/2018
  * Time: 16:35
  */
+
 namespace App\src\model;
 
 class User
@@ -13,7 +14,7 @@ class User
     private $username;
     private $password;
     private $email;
-    private $is_admin;
+    private $quality;
     private $status;
 
     /**
@@ -30,7 +31,7 @@ class User
      */
     public function setId($id)
     {
-        $this->id = (int) $id;
+        $this->id = (int)$id;
         return $this;
     }
 
@@ -72,19 +73,25 @@ class User
             $this->password = $password;
         }
         return $this;
-    }/**
- * @return mixed
- */
-    public function getIsAdmin()
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getquality()
     {
-        return $this->is_admin;
-    }/**
+        return $this->quality;
+    }
+
+    /**
      * @param mixed $is
      * @return User
      */
-    public function setIsAdmin($is_admin)
+    public function setquality($quality)
     {
-        $this->is_admin = (int) $is_admin;
+        if (is_string($quality)) {
+            $this->quality = $quality;
+        }
         return $this;
     }
 
@@ -123,8 +130,6 @@ class User
         $this->status = $status;
         return $this;
     }
-
-
 
 
 }

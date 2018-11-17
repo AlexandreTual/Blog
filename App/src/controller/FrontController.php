@@ -9,42 +9,25 @@
 namespace App\src\controller;
 
 use App\Core\Utils;
-use App\src\DAO\CommentDAO;
-use \App\src\DAO\PostDAO;
-use \App\src\model\View;
-use App\src\DAO\UserDAO;
 
-class FrontController
+class FrontController extends Controller
 {
-    private $view;
-    private $postDAO;
-    private $commentDAO;
-    private $userDAO;
-
-    public function __construct()
-    {
-        $this->postDAO = new PostDAO();
-        $this->view = new View();
-        $this->commentDAO = new CommentDAO();
-        $this->userDAO = new UserDAO();
-    }
-
     public function home()
     {
         $this->view->render('home');
     }
 
-    public function getPostList()
+    public function getPostList($category)
     {
-        $posts = $this->postDAO->getAll('waiting');
-        $this->view->render('post_list', ['posts' => $posts]);
+        $posts = $this->postDAO->getAll('waiting', $category);
+        $category = $this->categoryDAO->getCategory();
+        $this->view->render('post_list', ['posts' => $posts, 'category' => $category]);
     }
 
     public function post($id)
     {
         $post = $this->postDAO->getPost($id);
-
-        if ($post == null ) {
+        if ($post == null) {
             Utils::postWaiting();
         } else {
             if ($post->getPublish() == 'published' || Utils::isAdmin()) {
@@ -59,34 +42,28 @@ class FrontController
 
     public function login($login)
     {
+
         // s'il n'y a pas de session avec un identifiant. on redirige vers le formulaire de connexion.
         if (!isset($_SESSION['userId'])) {
             /*si le champ submit est présent et que les champs username et password correspondent,
         on connecte l'utilisateur*/
             if (isset($login['submit'])) {
-                if($this->userDAO->getLogin($login['username'], $login['password'])) {
 
-                    Utils::messageSuccess('Bienvenue '.ucfirst($_SESSION['username']). ' !','');
-                    $successM = 'Bienvenue '.ucfirst($_SESSION['username']). ' !';
-                    $message = Utils::messageAlert(true, $successM , null);
-                    Utils::addFlashBag('message', $message);
-                    header('Location: index.php');
-
+                if ($this->userDAO->getLogin($login['username'], $login['password'])) {
+                    Utils::messageSuccess('Bienvenue ' . ucfirst($_SESSION['username']) . ' !', 'home');
                 } else {
                     $errorM = 'Identifants incorrect ou compte inactif.';
-                    $message = Utils::messageAlert(false, null , $errorM);
+                    $message = Utils::messageAlert(false, null, $errorM);
                     Utils::addFlashBag('message', $message);
                 }
             }
             $this->view->render('login');
         } else {
-            $errorM = ucfirst($_SESSION['username']).' vous êtes déjà connecté !';
-            $message = Utils::messageAlert(false, null , $errorM);
+            $errorM = ucfirst($_SESSION['username']) . ' vous êtes déjà connecté !';
+            $message = Utils::messageAlert(false, null, $errorM);
             Utils::addFlashBag('message', $message);
             header('Location: index.php');
         }
-
-
     }
 
     public function logout()
@@ -95,117 +72,84 @@ class FrontController
         header('Location: index.php');
     }
 
-    public function Comment($idComment)
+    public function addComment($comment, $idArt)
     {
-        $idComment = (int) $idComment;
-        $comment = $this->commentDAO->getComment($idComment);
-        return $comment;
-    }
-
-    public function addComment($comment, $idArt, $userId)
-    {
-        if (Utils::isUser()) {
-            $idArt = (int) $idArt;
-            // insertion des différentes variables dans la bdd
-            $insert = $this->commentDAO->add($comment , $idArt, $userId);
-
-            // message mis en cache pour lecture sur le template
-            $successM = 'Le commentaire à bien été ajouté';
-            $errorM = 'Une erreur c\'est produite lors de l\'ajout du commentaire';
-            $message = Utils::messageAlert($insert, $successM, $errorM);
-            Utils::addFlashBag('message', $message);
-            header('Location: index.php?p=post&idArt='.$idArt);
-        }
-    }
-
-    public function updateComment($idComment, $idArt, $commentPost)
-    {
-        if (Utils::isUser()) {
-            // caster les variables pour être sur d'avoir des entiers.
+        if (Utils::checkField(['content', 'username'], $comment)) {
             $idArt = (int)$idArt;
-            $idComment = (int)$idComment;
-
-            //récupération du commentaire pour comparer les userId
-            $comment = $this->commentDAO->getComment($idComment);
-
-            if (($_SESSION['userId'] === $comment->getUserId()) || Utils::isAdmin()) {
-
-                /* on compare les id
-                 si pas de submit on appel le template pour modifier le commentaire*/
-                $this->view->render('update_comment', ['comment' => $comment]);
-
-                if (isset($commentPost['submit'])) {
-
-                    if (Utils::checkField(['content'], $commentPost)) {
-                        // si présence du submit et du champ content on enregistre en bdd.
-                        $update = $this->commentDAO->update($idComment, $commentPost);
-
-                        // message en fonction de la réussite de $update, mis en cache pour lecture sur le template.
-                        $sucessM = 'Le commentaire à bien été modifié';
-                        $errorM = 'Un problème est survenu lors de la modification du commentaire.';
-                        $message = Utils::messageAlert($update, $sucessM, $errorM);
-                        Utils::addFlashBag('message', $message);
-                        header('Location: index.php?p=post&idArt=' . $idArt);
-                    }
-                }
-            } else {
+            if (is_string($comment['content']) && is_string($comment['username'])) {
+                // insertion des différentes variables dans la bdd
+                $insert = $this->commentDAO->add($comment, $idArt);
                 // message mis en cache pour lecture sur le template
-                $errorM = 'Vous n\'avez pas le droit de modifier ce commentaire.';
-                $message = Utils::messageAlert(false, null, $errorM);
+                $successM = 'Le commentaire à bien été ajouté';
+                $errorM = 'Une erreur c\'est produite lors de l\'ajout du commentaire';
+                $message = Utils::messageAlert($insert, $successM, $errorM);
                 Utils::addFlashBag('message', $message);
                 header('Location: index.php?p=post&idArt=' . $idArt);
             }
         }
     }
 
+    public function updateComment($idComment, $idArt, $commentPost)
+    {
+        // caster les variables pour être sur d'avoir des entiers.
+        $idArt = (int)$idArt;
+        $idComment = (int)$idComment;
+        if (Utils::isAdmin()) {
+            /* on compare les id
+             si pas de submit on appel le template pour modifier le commentaire*/
+            $comment = $this->commentDAO->getComment($idComment);
+            $this->view->render('update_comment', ['comment' => $comment]);
+            if (isset($commentPost['submit'])) {
+                if (Utils::checkField(['content'], $commentPost)) {
+                    // si présence du submit et du champ content on enregistre en bdd.
+                    $update = $this->commentDAO->update($idComment, $commentPost);
+                    // message en fonction de la réussite de $update, mis en cache pour lecture sur le template.
+                    $sucessM = 'Le commentaire à bien été modifié';
+                    $errorM = 'Un problème est survenu lors de la modification du commentaire.';
+                    $message = Utils::messageAlert($update, $sucessM, $errorM);
+                    Utils::addFlashBag('message', $message);
+                    header('Location: index.php?p=post&idArt=' . $idArt);
+                }
+            }
+        } else {
+            // message mis en cache pour lecture sur le template
+            $errorM = 'Vous n\'avez pas le droit de modifier ce commentaire.';
+            $message = Utils::messageAlert(false, null, $errorM);
+            Utils::addFlashBag('message', $message);
+            header('Location: index.php?p=post&idArt=' . $idArt);
+        }
+    }
+
     public function deleteComment($idArt, $idComment)
     {
-        if (Utils::isUser()) {
-
-            if ((isset($idArt) && (isset($idComment))) || Utils::isAdmin() ){
-
-                // caster les variables pour être sur d'avoir des entiers.
-                $idArt = (int) $idArt;
-                $idComment = (int) $idComment;
-
-                /*récupération du commentaire , pour comparer les userid.
-                si les id correspondent on supprime le commentaire.*/
-                $comment = $this->commentDAO->getComment($idComment);
-                // si le commentaire n'existe pas on redirige vers la page d'accueil
-                if ($comment == null) {
-                    Utils::actionRefused();
-
-                } else {
-                    if ($_SESSION['userId'] === $comment->getUserId() && $idArt != 0 ) {
-
-                        $this->commentDAO->delete($idComment);
-                        $successM = 'Le commentaire à bien été supprimé';
-                        $message = Utils::messageAlert(true, $successM, null);
-                        Utils::addFlashBag('message', $message);
-                        header('Location: index.php?p=post&idArt='.$idArt);
-
-                    } elseif (Utils::isAdmin()) {
-
-                        $this->commentDAO->delete($idComment);
-                        $successM = 'Le commentaire à bien été supprimé';
-                        $message = Utils::messageAlert(true, $successM, null);
-                        Utils::addFlashBag('message', $message);
-                        header('Location: index.php?p=manage-comment');
-                    }
-                }
-            } else {
+        if ((isset($idArt)) && Utils::isAdmin()) {
+            // caster les variables pour être sur d'avoir des entiers.
+            $idArt = (int)$idArt;
+            $idComment = (int)$idComment;
+            $comment = $this->commentDAO->getComment($idComment);
+            // si le commentaire n'existe pas on redirige vers la page d'accueil
+            // sinon on supprime lecommentaire et on redirige vers l'article.
+            if ($comment === null) {
                 Utils::actionRefused();
+            } else {
+                $this->commentDAO->delete($idComment);
+                $successM = 'Le commentaire à bien été supprimé';
+                Utils::messageSuccess($successM, 'post&idArt=' . $idArt);
             }
-
         } elseif (!isset($idArt) && Utils::isAdmin()) {
             $this->commentDAO->delete($idComment);
             header('Location: index.php?p=manage-comment');
         }
     }
 
-
-
-
-
+    public function senderMail($post)
+    {
+        if(Utils::checkField(['firstname', 'lastname', 'content', 'email'], $post)) {
+            Utils::sendMail('contact', 'tual.alexandre@gmail.com', $post);
+            Utils::messageSuccess('Votre message vient d\'être envoyé, vous serez contacté prochainement.','home' );
+        } else {
+            Utils::messageError('Veuillez remplir tout les champs pour envoyer votre message', 'home');
+        }
+    }
 
 }

@@ -5,6 +5,7 @@
  * Date: 03/11/2018
  * Time: 23:41
  */
+
 namespace App\src\DAO;
 
 use App\src\model\User;
@@ -14,7 +15,7 @@ class UserDAO extends DAO
 {
     public function getLogin($username, $password)
     {
-        $sql = 'SELECT id, username, password, is_admin, status FROM users WHERE username = :username';
+        $sql = 'SELECT id, username, password, quality, status FROM users WHERE username = :username';
         $result = $this->checkConnection()->prepare($sql);
         $result->bindValue(':username', $username, \PDO::PARAM_STR);
         $result->execute();
@@ -25,7 +26,7 @@ class UserDAO extends DAO
                     if ($user->getPassword() === sha1($password)) {
                         $_SESSION['userId'] = $user->getId();
                         $_SESSION['username'] = $user->getUsername();
-                        $_SESSION['is_admin'] = $user->getIsAdmin();
+                        $_SESSION['quality'] = $user->getquality();
                         $_SESSION['status'] = $user->getStatus();
 
                         return true;
@@ -41,31 +42,37 @@ class UserDAO extends DAO
         return isset($_SESSION['auth']);
     }
 
-    public function getUser($id =null, $username = null, $email = null)
+    public function getUser($column, $info)
     {
-        if (isset($id)) {
-            $sql = 'SELECT id, username, password, email, is_admin, status  FROM users WHERE id = :id';
-            $req = $this->checkConnection()->prepare($sql);
-            $req->bindValue(':id', $id, \PDO::PARAM_INT);
-            $req->execute();
-            $result = $req->fetch();
+        $sql = 'SELECT id, username, password, email, quality, status  FROM users';
+        $sql .= ' WHERE ' . $column . ' = :'. $column;
+        $req = $this->checkConnection()->prepare($sql);
+        if (is_int($info)) {
+            $req->bindValue(':'. $column , $info, \PDO::PARAM_INT);
+        } else {
+            $req->bindValue(':' . $column , $info, \PDO::PARAM_STR);
+        }
+        $req->execute();
+        $result = $req->fetch();
+        if (!$result) {
+            return false;
+        } else {
             return $this->buildObject($result);
-        } elseif (isset($username)) {
-            $sql = 'SELECT username FROM users WHERE username = :username';
-            $req = $this->checkConnection()->prepare($sql);
-            $req->bindValue(':username', $username, \PDO::PARAM_STR);
-            $req->execute();
-            return $result = $req->fetch();
-
-        } elseif (isset($email)) {
-            $sql = 'SELECT email FROM users WHERE email = :email';
-            $req = $this->checkConnection()->prepare($sql);
-            $req->bindValue(':email', $email, \PDO::PARAM_STR);
-            $req->execute();
-            return $result = $req->fetch();
         }
     }
 
+    public function getAllUser()
+    {
+        $sql = 'SELECT id, username, quality, status FROM users ORDER BY id';
+        $req = $this->checkConnection()->query($sql);
+        $result = $req->fetchall();
+        $users = [];
+        foreach ($result as $row) {
+            $userId = $row['id'];
+            $users[$userId] = $this->buildObject($row);
+        }
+        return $users;
+    }
 
     public function add($username, $email, $password, $status)
     {
@@ -78,15 +85,17 @@ class UserDAO extends DAO
         return $req->execute();
     }
 
-    public function update($id, $status)
+    public function update($id, $password, $email, $quality, $status)
     {
-        $sql = 'UPDATE users SET status = :status WHERE id = :id';
+        $sql = 'UPDATE users SET password = :password, email = :email, quality = :quality, status = :status WHERE id = :id';
         $req = $this->checkConnection()->prepare($sql);
+        $req->bindValue(':password', $password, \PDO::PARAM_STR);
+        $req->bindValue(':email', $email, \PDO::PARAM_STR);
+        $req->bindValue(':quality', $quality, \PDO::PARAM_STR);
         $req->bindValue(':status', $status, \PDO::PARAM_STR);
         $req->bindValue(':id', $id, \PDO::PARAM_INT);
         return $req->execute();
     }
-
 
     public function buildObject(array $data)
     {
@@ -95,7 +104,7 @@ class UserDAO extends DAO
         $user->setUsername($data['username'] ?? null);
         $user->setEmail($data['email'] ?? null);
         $user->setPassword($data['password'] ?? null);
-        $user->setIsAdmin($data['is_admin'] ?? null);
+        $user->setquality($data['quality'] ?? null);
         $user->setStatus($data['status'] ?? null);
         return $user;
     }

@@ -9,10 +9,9 @@
 namespace App\config;
 
 use App\src\controller\BackController;
-use App\src\controller\FrontController;
 use App\src\controller\ErrorController;
-
-use \Exception;
+use App\src\controller\FrontController;
+use Exception;
 
 class Router
 {
@@ -43,10 +42,16 @@ class Router
                     $this->frontController->home();
                     break;
                 case 'post-list':
-                    $this->frontController->getPostList();
+                    $this->frontController->getPostList(null);
                     break;
                 case 'post':
                     $this->frontController->post($_GET['idArt']);
+                    break;
+                case'category':
+                    $this->frontController->getPostList($_GET['category']);
+                    break;
+                case 'add-category':
+                    $this->backController->addCategory($_POST);
                     break;
                 case 'login':
                     $this->frontController->login($_POST);
@@ -56,18 +61,6 @@ class Router
                     break;
                 case 'admin':
                     $this->backController->getAdmin();
-                    break;
-                case'add-comment':
-                    $this->frontController->addComment($_POST, $_GET['idArt'], $_SESSION['userId']);
-                    break;
-                case 'delete-comment':
-                    $this->frontController->deleteComment($_GET['idArt'], $_GET['idComment']);
-                    break;
-                case 'update-comment':
-                    $this->frontController->updateComment($_GET['idComment'],$_GET['idArt'], $_POST);
-                    break;
-                case 'manage-comment':
-                    $this->backController->GetCommentList();
                     break;
                 case'add-post':
                     $this->backController->addPost($_POST);
@@ -81,12 +74,32 @@ class Router
                 case'publish-post':
                     $this->backController->updatePost($_GET['idArt'], $_POST, $_GET['publish']);
                     break;
+                case'add-comment':
+                    $this->frontController->addComment($_POST, $_GET['idArt']);
+                    break;
+                case 'delete-comment':
+                    $this->frontController->deleteComment($_GET['idArt'], $_GET['idComment']);
+                    break;
+                case 'update-comment':
+                    $this->frontController->updateComment($_GET['idComment'], $_GET['idArt'], $_POST);
+                    break;
                 case'publish-comment':
-
                     $this->backController->publishComment($_GET['idComment'], $_GET['publish']);
+                    break;
+                case 'manage-comment':
+                    $this->backController->GetCommentList();
                     break;
                 case'registration':
                     $this->backController->registration($_POST, $_GET['userId'], $_GET['activ']);
+                    break;
+                case 'update-password':
+                    $this->backController->PasswordUpdate($_POST);
+                    break;
+                case 'is-admin':
+                    $this->backController->accountUpdate($_GET['id'], $_GET['quality']);
+                    break;
+                case'contact':
+                    $this->frontController->SenderMail($_POST);
                     break;
                 default:
                     $this->errorController->unknown();

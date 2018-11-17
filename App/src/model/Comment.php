@@ -2,7 +2,6 @@
 
 namespace App\src\model;
 
-
 class Comment
 {
     private $id;
@@ -11,7 +10,6 @@ class Comment
     private $dateAdded;
     private $dateAmended;
     private $postId;
-    private $userId;
     private $publish;
 
     /**
@@ -28,7 +26,7 @@ class Comment
      */
     public function setId($id)
     {
-        $this->id = (int) $id;
+        $this->id = (int)$id;
         return $this;
     }
 
@@ -128,7 +126,7 @@ class Comment
      */
     public function setPostId($postId)
     {
-        $this->postId = (int) $postId;
+        $this->postId = (int)$postId;
         return $this;
     }
 
@@ -146,7 +144,7 @@ class Comment
      */
     public function setUserId($userId)
     {
-        $this->userId = (int) $userId;
+        $this->userId = (int)$userId;
         return $this;
     }
 
@@ -167,7 +165,6 @@ class Comment
         $this->publish = $publish;
         return $this;
     }
-
 
 
 }

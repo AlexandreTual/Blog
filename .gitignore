@@ -5,6 +5,8 @@ package.json
 yarn.lock
 node_modules/
 App/public/css/
+App/public/img/
 App/public/js/
 composer.lock
 vendor/
+PHP-CS-Fixer-2.13/

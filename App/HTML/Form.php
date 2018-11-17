@@ -1,16 +1,19 @@
 <?php
-namespace App\HTML;;
 
-class Form {
+namespace App\HTML;
+;
 
-    /**
-     * @var array données utlisées dans le formulaire
-     */
-    private $data;
+class Form
+{
+
     /**
      * @var string tag utilisé pour entourer les champs
      */
     public $surround = 'p';
+    /**
+     * @var array données utlisées dans le formulaire
+     */
+    private $data;
 
     /**
      * Form constructor.
@@ -22,10 +25,21 @@ class Form {
     }
 
     /**
+     * @param $name
+     * @return string champ input de formuaire
+     */
+    public function input($label, $name, $option = [])
+    {
+        $type = isset($option['type']) ? $option['type'] : 'text';
+        return $this->surround('<input type="' . $type . '" name="' . $name . '" value="' . $this->getValue($name) . '">');
+    }
+
+    /**
      * @param $html
      * @return string code html a entourer
      */
-    protected function surround($html) {
+    protected function surround($html)
+    {
         return "<{$this->surround}>$html</{$this->surround}>";
     }
 
@@ -33,7 +47,8 @@ class Form {
      * @param $index
      * @return mixed|null value a retourner dans le champs input
      */
-    protected function getValue($index) {
+    protected function getValue($index)
+    {
         if (is_object($this->data)) {
             return $this->data->$index;
         }
@@ -41,20 +56,12 @@ class Form {
     }
 
     /**
-     * @param $name
-     * @return string champ input de formuaire
-     */
-    public function input($label, $name, $option = []) {
-        $type = isset($option['type']) ? $option['type'] : 'text';
-        return $this->surround('<input type="' . $type . '" name="' . $name . '" value="' . $this->getValue($name) .'">');
-    }
-
-
-
-    /**
      * @return string champ submit de formulaire
      */
-    public function submit($label) {
-        return $this->surround('<input type="submit">'. $label . '</input>');
+    public function submit($label)
+    {
+        return $this->surround('<input type="submit">' . $label . '</input>');
     }
+
+
 }

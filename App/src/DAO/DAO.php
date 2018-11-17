@@ -9,8 +9,8 @@
 namespace App\src\DAO;
 
 use App\config\Config;
-use \PDO;
-use \Exception;
+use Exception;
+use PDO;
 
 abstract class DAO
 {
