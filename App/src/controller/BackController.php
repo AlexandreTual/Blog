@@ -104,7 +104,7 @@ class BackController extends Controller
         }
     }
 
-    public function registration($post, $userId = null, $activ = null)
+    public function registration($post, $userId = null, $key = null)
     {
         if (isset($post['submit'])) {
             // vérification de la présente de tout les champs attendus.
@@ -122,14 +122,14 @@ class BackController extends Controller
                             // vérification de l'égalité des mots de passe.
                             if ($pass1 === $pass2) {
                                 // création d'un code unique afin de valider le compte par la suite
-                                $status = uniqid();
+                                $validationKey = uniqid();
                                 // cryptage du mot de passe
                                 $password = sha1($pass1);
                                 // insertion des données dans la bdd.
-                                $newUser = $this->userDAO->add($username, $email, $password, $status);
+                                $newUser = $this->userDAO->add($username, $email, $password, $validationKey);
                                 $id = $this->userDAO->checkConnection()->lastInsertId();
                                 if ($newUser) {
-                                    Utils::sendMail('registration', $email, null, $username, $status, $id);
+                                    Utils::sendMail('registration', $email, null, $username, $validationKey, $id);
                                     // envoi de l'email contenant le lien de validation de compte.
                                     Utils::messageSuccess('Nous vous remercions de vous être enregistré, un email vous à été envoyé afin de valider votre compte !', 'login');
                                 } else {
@@ -150,12 +150,12 @@ class BackController extends Controller
             } else {
                 Utils::messageError('Veuillez renseigner tout les champs.', 'login');
             }
-        } elseif (!empty($userId) && !empty($activ)) {
+        } elseif (!empty($userId) && !empty($key)) {
             $userId = (int)$userId;
-            if ($userId != 0 && is_string($activ)) {
+            if ($userId != 0 && is_string($key)) {
                 $user = $this->userDAO->getUser('id', $userId);
-                if ($user->getStatus() === $activ) {
-                    $this->userDAO->update( $user->getId(), $user->getPassword(), $user->getEmail(), $user->getquality(),'active');
+                if ($user->getValidationKey() === $key) {
+                    $this->userDAO->update( $user->getId(), $user->getPassword(), $user->getEmail(), $user->getquality(),'active', $user->getValidationKey());
                     Utils::messageSuccess('Félicitation votre compte est actif, vous pouvez vous identifier !', 'login');
                 }
             }
@@ -169,7 +169,8 @@ class BackController extends Controller
         if (Utils::isAdmin()) {
             if (isset($id) && isset($quality)) {
                 $user = $this->userDAO->getUser('id',$id);
-                $this->userDAO->update($id, $user->getPassword(), $user->getEmail(), $quality, $user->getStatus());
+                $this->userDAO->update($id, $user->getPassword(), $user->getEmail(), $quality,
+                    $user->getStatus(), $user->getValidationKey());
                 Utils::messageSuccess('Compte mis à jour avec succès', 'admin');
         }
        }
@@ -218,6 +219,41 @@ class BackController extends Controller
             }
         } else {
             $this->view->render('update-password');
+        }
+    }
+
+    public function updateUserStatus($userId, $status)
+    {
+        if (Utils::isAdmin()) {
+            $userId = (int)$userId;
+            $status = (int)$status;
+            if (0 < $userId) {
+                $user = $this->userDAO->getUser('id',$userId);
+                $req = $this->userDAO->update($user->getId(), $user->getPassword(), $user->getEmail(),
+                    $user->getquality(), $status, $user->getValidationKey());
+                if ($req) {
+                    Utils::messageSuccess('Status modifié !', 'admin');
+                } else {
+                    Utils::messageError('Erreur !! Status non modifié', 'admin' );
+                }
+            }
+        }
+    }
+
+    public function updateUserQuality($userId, $quality)
+    {
+        if (Utils::isAdmin()) {
+            $userId = (int)$userId;
+            if (0 < $userId && is_string($quality)) {
+                $user = $this->userDAO->getUser('id',$userId);
+                $req = $this->userDAO->update($user->getId(), $user->getPassword(), $user->getEmail(),
+                    $quality, $user->getStatus(), $user->getValidationKey());
+                if ($req) {
+                    Utils::messageSuccess('Qualité modifié !', 'admin');
+                } else {
+                    Utils::messageError('Erreur !! Status non modifié', 'admin' );
+                }
+            }
         }
     }
 }

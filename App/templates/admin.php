@@ -22,7 +22,7 @@ $form = new \App\HTML\BootstrapForm($_POST);
     </div>
     <div class="ml-2">
         <form action="index.php?p=add-category" method="post" class="form-inline">
-            <div class="mr-4">
+            <div class="mr-2">
             <?=$form->input(null, 'name', ['type' => 'text'], null,null,
                 null,null, null, null, 'Nouvelle catégorie ?')?>
             </div>
@@ -109,23 +109,31 @@ $form = new \App\HTML\BootstrapForm($_POST);
             <td class="text-xl-center"><?=$user->getId()?></td>
             <td class="text-xl-center"><?=ucfirst($user->getUsername())?></td>
             <td class="text-xl-center"><?=$user->getquality()?></td>
-            <td class="text-xl-center"><?=$user->getStatus()?></td>
+            <td class="text-xl-center"><?php if ($user->getStatus()) {
+                                                echo 'actif';
+                                            } else {
+                                                echo 'inactif';
+                                            } ?></td>
             <td>
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Action sur l'utilisateur
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <?php if ($user->getStatus() === 'disable') {
-                            echo ' <a class="dropdown-item" href="#">Activer</a>';
-                        } else {
-                            echo '<a class="dropdown-item" href="#">Désactiver</a>';
-                        }
-                        if ($user->getquality() === 'admin') {
-                            echo '<a class="dropdown-item" href="#">Utilisateur</a>';
-                        } else {
-                            echo '<a class="dropdown-item" href="#">Administrateur</a>';
-                        }?>
+                        <?php if (!$user->getStatus()):?>
+                            <a class="dropdown-item" href="index.php?p=update-user-status&userId=<?= $user->getId()?>&status=1">
+                                Activer compte</a>
+                         <?php else:?>
+                            <a class="dropdown-item" href="index.php?p=update-user-status&userId=<?= $user->getId()?>&status=0">
+                                Désactiver compte</a>
+                        <?php endif;?>
+                        <?php if ('admin' === $user->getquality()):?>
+                            <a class="dropdown-item" href="index.php?p=update-user-quality&userId=<?=$user->getId()?>&quality=user">
+                                Utilisateur</a>
+                        <?php else:?>
+                            <a class="dropdown-item" href="index.php?p=update-user-quality&userId=<?=$user->getId()?>&quality=admin">
+                                Administrateur</a>
+                        <?php endif;?>
                     </div>
                 </div>
             </td>

@@ -90,10 +90,16 @@ class Router
                     $this->backController->GetCommentList();
                     break;
                 case'registration':
-                    $this->backController->registration($_POST, $_GET['userId'], $_GET['activ']);
+                    $this->backController->registration($_POST, $_GET['userId'], $_GET['key']);
                     break;
                 case 'update-password':
                     $this->backController->PasswordUpdate($_POST);
+                    break;
+                case 'update-user-status':
+                    $this->backController->updateUserStatus($_GET['userId'], $_GET['status']);
+                    break;
+                case 'update-user-quality':
+                    $this->backController->updateUserQuality($_GET['userId'], $_GET['quality']);
                     break;
                 case 'is-admin':
                     $this->backController->accountUpdate($_GET['id'], $_GET['quality']);

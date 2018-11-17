@@ -22,7 +22,7 @@ class UserDAO extends DAO
         if ($user = $result->fetch()) {
             $user = $this->buildObject($user);
             if ($user) {
-                if ($user->getStatus() === 'active') {
+                if ($user->getStatus()) {
                     if ($user->getPassword() === sha1($password)) {
                         $_SESSION['userId'] = $user->getId();
                         $_SESSION['username'] = $user->getUsername();
@@ -37,11 +37,6 @@ class UserDAO extends DAO
         return false;
     }
 
-    public function logged()
-    {
-        return isset($_SESSION['auth']);
-    }
-
     public function getUser($column, $info)
     {
         $sql = 'SELECT id, username, password, email, quality, status, validation_key  FROM users';
@@ -49,8 +44,10 @@ class UserDAO extends DAO
         $req = $this->checkConnection()->prepare($sql);
         if (is_int($info)) {
             $req->bindValue(':'. $column , $info, \PDO::PARAM_INT);
-        } else {
+        } elseif (is_int($info)) {
             $req->bindValue(':' . $column , $info, \PDO::PARAM_STR);
+        } elseif (is_bool($info)) {
+            $req->bindValue(':' . $column , $info, \PDO::PARAM_BOOL);
         }
         $req->execute();
         $result = $req->fetch();
@@ -74,15 +71,15 @@ class UserDAO extends DAO
         return $users;
     }
 
-    public function add($username, $email, $password, $status)
+    public function add($username, $email, $password, $validationKey) : bool
     {
-        $sql = 'INSERT INTO users (username, password, email, status) 
-                VALUES (:username, :password, :email, :status)';
+        $sql = 'INSERT INTO users (username, password, email, status, validation_key) 
+                VALUES (:username, :password, :email, :status, validation_key = :validation_key)';
         $req = $this->checkConnection()->prepare($sql);
         $req->bindValue(':username', $username, \PDO::PARAM_STR);
         $req->bindValue(':password', $password, \PDO::PARAM_STR);
         $req->bindValue(':email', $email, \PDO::PARAM_STR);
-        $req->bindValue(':status', $status, \PDO::PARAM_STR);
+        $req->bindValue(':validation_key', $validationKey, \PDO::PARAM_STR);
 
         return $req->execute();
     }
@@ -97,7 +94,7 @@ class UserDAO extends DAO
         $req->bindValue(':password', $password, \PDO::PARAM_STR);
         $req->bindValue(':email', $email, \PDO::PARAM_STR);
         $req->bindValue(':quality', $quality, \PDO::PARAM_STR);
-        $req->bindValue(':status', $status, \PDO::PARAM_STR);
+        $req->bindValue(':status', $status, \PDO::PARAM_BOOL);
         $req->bindValue(':validation_key', $validationKey, \PDO::PARAM_STR);
         $req->bindValue(':id', $id, \PDO::PARAM_INT);
 

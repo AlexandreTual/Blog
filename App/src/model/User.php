@@ -128,7 +128,10 @@ class User
      */
     public function setStatus($status)
     {
-        $this->status = $status;
+        $status = (bool)$status;
+        if (is_bool($status)) {
+            $this->status = $status;
+        }
         return $this;
     }
 

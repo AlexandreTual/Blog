@@ -148,7 +148,7 @@ abstract class Utils
                         <p>Hey <strong>' . ucfirst($username) . '</strong>,</p>
                         <p>Nous sommes fier que vous ayez choisi de vous inscrire sur notre blog</p>
                         <p>Pour activer votre compte, cliquer sur le lien ci-dessous:</p>
-                        <a href="http://localhost/BLog/ProjetBlog/App/public/index.php?p=registration&userId=' . $id . '&activ=' . $activationKey . '">Activation de compte</a>
+                        <a href="http://localhost/BLog/ProjetBlog/App/public/index.php?p=registration&userId=' . $id . '&key=' . $validationKey . '">Activation de compte</a>
                         <p>Vous retrouverez régulièrement des articles traitant de mon parcours en tant developpeur PHP</p>
                         <p>Cordialement<br>
                         <em>Le blogggeur</em></p>

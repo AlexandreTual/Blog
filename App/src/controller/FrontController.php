@@ -48,7 +48,6 @@ class FrontController extends Controller
             /*si le champ submit est présent et que les champs username et password correspondent,
         on connecte l'utilisateur*/
             if (isset($login['submit'])) {
-
                 if ($this->userDAO->getLogin($login['username'], $login['password'])) {
                     Utils::messageSuccess('Bienvenue ' . ucfirst($_SESSION['username']) . ' !', 'home');
                 } else {
