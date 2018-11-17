@@ -16,6 +16,7 @@ class User
     private $email;
     private $quality;
     private $status;
+    private $validationKey;
 
     /**
      * @return mixed
@@ -130,6 +131,26 @@ class User
         $this->status = $status;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getValidationKey()
+    {
+        return $this->validationKey;
+    }
+
+    /**
+     * @param mixed $validationKey
+     * @return User
+     */
+    public function setValidationKey($validationKey)
+    {
+        $this->validationKey = $validationKey;
+        return $this;
+    }
+
+
 
 
 }

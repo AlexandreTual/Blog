@@ -187,23 +187,23 @@ class BackController extends Controller
         }
     }
 
-    public function PasswordUpdate($post)
+    public function passwordUpdate($post)
     {
         if (isset($post['submit']) && isset($post['email'])) {
             if ((filter_var($post['email'], FILTER_VALIDATE_EMAIL)) && ($this->userDAO->getUser('email', $post['email']))) {
-                $status = uniqid();
-                $password = 'waiting to update';
+                $validationKey = uniqid();
                 $user = $this->userDAO->getUser('email', $post['email']);
-                $this->userDAO->update($user->getId(), $password, $user->getEmail(), $user->getQuality(), $status);
-                Utils::sendMail('update-password',$user->getEmail(), $user, null, $status);
-                Utils::messageSuccess('Votre mot de passe à été réinitialisé, un email vous a été envoyé !', 'login');
+                $this->userDAO->update($user->getId(), $user->getPassword(), $user->getEmail(), $user->getQuality(), $user->getStatus(), $validationKey);
+                Utils::sendMail('update-password',$user->getEmail(), $user, null, $validationKey);
+                Utils::messageSuccess('Opération réalisé avec success, un email vous a été envoyé !', 'login');
             }
         } elseif (isset($post['submit']) && isset($post['password']) && isset($post['password2'])) {
-            if ($post['password'] == $post['password2']) {
+            if ($post['password'] === $post['password2']) {
                 $user = $this->userDAO->getUser('id', $_SESSION['userId']);
-                if ($user->getStatus() == $_SESSION['status']) {
+                if ($user->getValidationKey() === $_SESSION['key']) {
                     $password = sha1($post['password']);
-                    $update = $this->userDAO->update($user->getId(),$password , $user->getEmail(), $user->getquality(), 'active');
+                    $update = $this->userDAO->update($user->getId(),$password , $user->getEmail(),
+                        $user->getquality(), $user->getStatus(), $user->getValidationKey());
                     session_destroy();
                     if ($update) {
                         Utils::messageSuccess('Votre mot de passe à été mis à jour, vous pouvez vous connecter !', 'login');
@@ -214,7 +214,7 @@ class BackController extends Controller
             } else {
                 $message = Utils::messageAlert(false,null,'Les mots de passes doivent être identique');
                 Utils::addFlashBag('message', $message);
-                header('Location: index.php?p=update-password&userId='. $_SESSION['userId']. '&status=' . $_SESSION['status']);
+                header('Location: index.php?p=update-password&userId='. $_SESSION['userId']. '&key=' . $_SESSION['key']);
             }
         } else {
             $this->view->render('update-password');

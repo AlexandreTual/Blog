@@ -44,7 +44,7 @@ class UserDAO extends DAO
 
     public function getUser($column, $info)
     {
-        $sql = 'SELECT id, username, password, email, quality, status  FROM users';
+        $sql = 'SELECT id, username, password, email, quality, status, validation_key  FROM users';
         $sql .= ' WHERE ' . $column . ' = :'. $column;
         $req = $this->checkConnection()->prepare($sql);
         if (is_int($info)) {
@@ -76,28 +76,35 @@ class UserDAO extends DAO
 
     public function add($username, $email, $password, $status)
     {
-        $sql = 'INSERT INTO users (username, password, email, status) VALUES (:username, :password, :email, :status)';
+        $sql = 'INSERT INTO users (username, password, email, status) 
+                VALUES (:username, :password, :email, :status)';
         $req = $this->checkConnection()->prepare($sql);
         $req->bindValue(':username', $username, \PDO::PARAM_STR);
         $req->bindValue(':password', $password, \PDO::PARAM_STR);
         $req->bindValue(':email', $email, \PDO::PARAM_STR);
         $req->bindValue(':status', $status, \PDO::PARAM_STR);
+
         return $req->execute();
     }
 
-    public function update($id, $password, $email, $quality, $status)
+    public function update($id, $password, $email, $quality, $status, $validationKey)
     {
-        $sql = 'UPDATE users SET password = :password, email = :email, quality = :quality, status = :status WHERE id = :id';
+        $sql = 'UPDATE users 
+                SET password = :password, email = :email, quality = :quality, status = :status,
+                validation_key = :validation_key 
+                WHERE id = :id';
         $req = $this->checkConnection()->prepare($sql);
         $req->bindValue(':password', $password, \PDO::PARAM_STR);
         $req->bindValue(':email', $email, \PDO::PARAM_STR);
         $req->bindValue(':quality', $quality, \PDO::PARAM_STR);
         $req->bindValue(':status', $status, \PDO::PARAM_STR);
+        $req->bindValue(':validation_key', $validationKey, \PDO::PARAM_STR);
         $req->bindValue(':id', $id, \PDO::PARAM_INT);
+
         return $req->execute();
     }
 
-    public function buildObject(array $data)
+    public function buildObject(array $data): User
     {
         $user = new User();
         $user->setId($data['id'] ?? null);
@@ -106,6 +113,8 @@ class UserDAO extends DAO
         $user->setPassword($data['password'] ?? null);
         $user->setquality($data['quality'] ?? null);
         $user->setStatus($data['status'] ?? null);
+        $user->setValidationKey($data['validation_key'] ?? null);
+
         return $user;
     }
 }

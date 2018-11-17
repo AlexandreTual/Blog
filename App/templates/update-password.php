@@ -7,9 +7,9 @@
  */
 $form = new \App\HTML\BootstrapForm($_POST);
 \App\Core\Utils::echoFlashBag('message');
-if (isset($_GET['userId']) && isset($_GET['status'])) {
+if (isset($_GET['userId']) && isset($_GET['key'])) {
     $_SESSION['userId'] = $_GET['userId'];
-    $_SESSION['status'] = $_GET['status'];
+    $_SESSION['key'] = $_GET['key'];
     ?>
     <div class="text-center">
         <div class="offset-lg-4 col-lg-4">

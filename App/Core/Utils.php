@@ -129,7 +129,7 @@ abstract class Utils
         header('Location: index.php?p=' . $redirection);
     }
 
-    public static function sendMail($html, $recipient = null, $post = null, $username = null, $activationKey = null, $id = null)
+    public static function sendMail($html, $recipient = null, $post = null, $username = null, $validationKey = null, $id = null)
     {
         if ($html === 'contact') {
             $message = '<html>
@@ -160,9 +160,10 @@ abstract class Utils
                         <head></head>
                         <body>
                         <p>Hey <strong>' . ucfirst($post->getUsername()) . '</strong>,</p>
-                        <p>votre mot de passe à été réinitialisé.</p>
-                        <p>Pour mettre à jour votre mot de passe, cliquer sur le lien ci-dessous:</p>
-                        <a href="http://localhost/BLog/ProjetBlog/App/public/index.php?p=update-password&userId=' . $post->getId() . '&status=' . $activationKey . '">Mettre à jour le mot de passe.</a><br>
+                        <p>Une demande de réinitialisation de mot de passe nous est parvenue.<br>
+                        Si ce n\'est pas vous qui avez effectué cette demande, ne tenez pas compte de cet email.</p>
+                        <p>Sinon pour mettre à jour votre mot de passe, cliquer sur le lien ci-dessous:</p>
+                        <a href="http://localhost/BLog/ProjetBlog/App/public/index.php?p=update-password&userId=' . $post->getId() . '&key=' . $validationKey . '">Mettre à jour le mot de passe.</a><br>
                         <p>Cordialement<br>
                         <em>Le blogggeur</em></p>
                         </body>
