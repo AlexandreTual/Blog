@@ -56,11 +56,12 @@ class PostDAO extends DAO
         if ($row = $result->fetch()) {
             return $this->buildObject($row);
         }
+        return false;
     }
 
 
 
-    public function add($post, $userId)
+    public function add($post, $userId) : string
     {
         $userId = (int)$userId;
         $post = $this->buildObject($post);
@@ -75,16 +76,16 @@ class PostDAO extends DAO
         $req->bindValue(':category', $category, \PDO::PARAM_INT);
         $req->bindValue(':user_id', $userId, \PDO::PARAM_INT);
         $req->execute();
+
         return $this->checkConnection()->lastInsertId();
     }
 
-    public function update($id, $post, $publish = null)
+    public function update($id, $post, $publish = null) : bool
     {
         if (isset($post)) {
             $post = $this->buildObject($post, true);
             $category = (int)$post->getCategory();
         }
-
         if (isset($publish)) {
             // requète permettant de modifier l'etat de publication.
             $sql = 'UPDATE posts SET publish= :publish WHERE id = :id';
@@ -92,6 +93,7 @@ class PostDAO extends DAO
             $req = $this->checkConnection()->prepare($sql);
             $req->bindValue(':publish', $publish, \PDO::PARAM_STR);
             $req->bindValue(':id', $id, \PDO::PARAM_INT);
+
             return $req->execute();
         } else {
             // requète permettant de modifier le contenu de l'article.
@@ -105,18 +107,17 @@ class PostDAO extends DAO
             $req->bindValue(':date_amended', $post->getDateAmended(), \PDO::PARAM_STR);
             $req->bindValue(':category_id', $category, \PDO::PARAM_INT);
             $req->bindValue(':id', $id, \PDO::PARAM_INT);
+
             return $req->execute();
         }
-
-
     }
 
-    public function delete($id)
+    public function delete($id) : bool
     {
         $sql = 'DELETE FROM posts WHERE id = :id';
         $req = $this->checkConnection()->prepare($sql);
         $req->bindValue(':id', $id, \PDO::PARAM_INT);
-        return $post = $req->execute();
+        return $req->execute();
     }
 
     public function buildObject(array $data, $updateContent = false): Post

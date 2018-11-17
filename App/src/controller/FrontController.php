@@ -27,7 +27,7 @@ class FrontController extends Controller
     public function post($id)
     {
         $post = $this->postDAO->getPost($id);
-        if ($post == null) {
+        if (!$post) {
             Utils::postWaiting();
         } else {
             if ($post->getPublish() == 'published' || Utils::isAdmin()) {
@@ -68,7 +68,7 @@ class FrontController extends Controller
     public function logout()
     {
         session_destroy();
-        header('Location: index.php');
+        Utils::messageSuccess('Vous êtes Déconnecté !', 'home');
     }
 
     public function addComment($comment, $idArt)
@@ -128,7 +128,7 @@ class FrontController extends Controller
             $comment = $this->commentDAO->getComment($idComment);
             // si le commentaire n'existe pas on redirige vers la page d'accueil
             // sinon on supprime lecommentaire et on redirige vers l'article.
-            if ($comment === null) {
+            if (!$comment) {
                 Utils::actionRefused();
             } else {
                 $this->commentDAO->delete($idComment);
