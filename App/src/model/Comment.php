@@ -8,7 +8,6 @@ class Comment
     private $username;
     private $content;
     private $dateAdded;
-    private $dateAmended;
     private $postId;
     private $publish;
 
@@ -88,26 +87,6 @@ class Comment
     {
         if (is_string($dateAdded)) {
             $this->dateAdded = $dateAdded;
-        }
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDateAmended()
-    {
-        return $this->dateAmended;
-    }
-
-    /**
-     * @param mixed $dateAmended
-     * @return Comment
-     */
-    public function setDateAmended($dateAmended)
-    {
-        if (is_string($dateAmended)) {
-            $this->dateAmended = $dateAmended;
         }
         return $this;
     }

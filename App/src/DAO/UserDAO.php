@@ -44,7 +44,7 @@ class UserDAO extends DAO
         $req = $this->checkConnection()->prepare($sql);
         if (is_int($info)) {
             $req->bindValue(':'. $column , $info, \PDO::PARAM_INT);
-        } elseif (is_int($info)) {
+        } elseif (is_string($info)) {
             $req->bindValue(':' . $column , $info, \PDO::PARAM_STR);
         } elseif (is_bool($info)) {
             $req->bindValue(':' . $column , $info, \PDO::PARAM_BOOL);
@@ -73,8 +73,8 @@ class UserDAO extends DAO
 
     public function add($username, $email, $password, $validationKey) : bool
     {
-        $sql = 'INSERT INTO users (username, password, email, status, validation_key) 
-                VALUES (:username, :password, :email, :status, validation_key = :validation_key)';
+        $sql = 'INSERT INTO users (username, password, email, validation_key) 
+                VALUES (:username, :password, :email, :validation_key)';
         $req = $this->checkConnection()->prepare($sql);
         $req->bindValue(':username', $username, \PDO::PARAM_STR);
         $req->bindValue(':password', $password, \PDO::PARAM_STR);

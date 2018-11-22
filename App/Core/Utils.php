@@ -110,7 +110,7 @@ abstract class Utils
         $errorM = 'Cet article n\'est pas disponible, mais n\'hésitez pas à lire nos autres articles !';
         $message = Utils::messageAlert(false, null, $errorM);
         Utils::addFlashBag('message', $message);
-        header('Location: index.php?p=post-list');
+        header('Location: index.php?p=post_list');
     }
 
     public static function messageError($message, $redirection)
@@ -154,7 +154,7 @@ abstract class Utils
                         <em>Le blogggeur</em></p>
                         </body>
                         </html>';
-        } elseif ($html === 'update-password') {
+        } elseif ($html === 'update_password') {
             $object = 'Réinitialisation de mot de passe';
             $message = '<html>
                         <head></head>
@@ -163,7 +163,7 @@ abstract class Utils
                         <p>Une demande de réinitialisation de mot de passe nous est parvenue.<br>
                         Si ce n\'est pas vous qui avez effectué cette demande, ne tenez pas compte de cet email.</p>
                         <p>Sinon pour mettre à jour votre mot de passe, cliquer sur le lien ci-dessous:</p>
-                        <a href="http://localhost/BLog/ProjetBlog/App/public/index.php?p=update-password&userId=' . $post->getId() . '&key=' . $validationKey . '">Mettre à jour le mot de passe.</a><br>
+                        <a href="http://localhost/BLog/ProjetBlog/App/public/index.php?p=update_password&userId=' . $post->getId() . '&key=' . $validationKey . '">Mettre à jour le mot de passe.</a><br>
                         <p>Cordialement<br>
                         <em>Le blogggeur</em></p>
                         </body>

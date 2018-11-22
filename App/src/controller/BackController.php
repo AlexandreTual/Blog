@@ -12,7 +12,7 @@ class BackController extends Controller
             $posts = $this->postDAO->getAll('all', null,true);
             $comments = $this->commentDAO->getComments('waiting');
             $users = $this->userDAO->getAllUser();
-            $this->view->render('admin', ['posts' => $posts, 'comments' => $comments, 'users' => $users]);
+            $this->viewTwig->render('admin.twig', ['posts' => $posts, 'comments' => $comments, 'users' => $users]);
         } else {
             header('Location: index.php');
         }
@@ -35,7 +35,8 @@ class BackController extends Controller
                 }
             }
             $category = $this->categoryDAO->getCategory();
-            $this->view->render('add-post',['category' => $category]);
+            $session = $_SESSION ?: '';
+            $this->viewTwig->render('add_post.twig',['category' => $category, 'session' => $session]);
         }
     }
 
@@ -66,7 +67,10 @@ class BackController extends Controller
             // on appel le l'article pour remplir le formulaire de modification
             $post = $this->postDAO->getPost($id);
             $category = $this->categoryDAO->getCategory();
-            $this->view->render('update-post', ['post' => $post, 'category' => $category]);
+            $session = $_SESSION ?: '';
+            $this->viewTwig->render('update_post.twig', ['post' => $post,
+                'category' => $category,
+                'session' => $session ]);
         }
     }
 
@@ -89,7 +93,8 @@ class BackController extends Controller
     {
         if (Utils::isAdmin()) {
             $comments = $this->commentDAO->getComments('waiting');
-            $this->view->render('manage_comment', ['comments' => $comments]);
+            $session = $_SESSION ?: '';
+            $this->viewTwig->render('manage_comment.twig', ['comments' => $comments, 'session' => $session]);
         }
     }
 
@@ -100,7 +105,7 @@ class BackController extends Controller
             $successM = 'Le commentaire vient d\'être publié';
             $message = Utils::messageAlert(true, $successM, null);
             Utils::addFlashBag('message', $message);
-            header('Location: index.php?p=manage-comment');
+            header('Location: index.php?p=manage_comment');
         }
     }
 
@@ -111,35 +116,40 @@ class BackController extends Controller
             if (Utils::checkField(['username', 'email', 'password', 'password2'], $post)) {
                 $username = $post['username'];
                 $email = $post['email'];
-                $pass1 = $post['password'];
-                $pass2 = $post['password2'];
+                $password1 = $post['password'];
+                $password2 = $post['password2'];
                 // vérification de l'absence du nom d'utilisateur dans la bdd.
                 if (!$this->userDAO->getUser('username', $username)) {
                     // vérification de la validité de l'adresse mail.
-                    if ((filter_var($email, FILTER_VALIDATE_EMAIL)) && (!$this->userDAO->getUser('email', $email))) {
+                    if ((filter_var($email, FILTER_VALIDATE_EMAIL))
+                        && (!$this->userDAO->getUser('email', $email))) {
                         // vérification de la longeur du mot de passe.
-                        if (strlen($pass1) >= 4) {
+                        if (strlen($password1) >= 4) {
                             // vérification de l'égalité des mots de passe.
-                            if ($pass1 === $pass2) {
+                            if ($password1 === $password2) {
                                 // création d'un code unique afin de valider le compte par la suite
                                 $validationKey = uniqid();
                                 // cryptage du mot de passe
-                                $password = sha1($pass1);
+                                $password = sha1($password1);
                                 // insertion des données dans la bdd.
                                 $newUser = $this->userDAO->add($username, $email, $password, $validationKey);
                                 $id = $this->userDAO->checkConnection()->lastInsertId();
                                 if ($newUser) {
-                                    Utils::sendMail('registration', $email, null, $username, $validationKey, $id);
+                                    Utils::sendMail('registration', $email, null, $username
+                                        , $validationKey, $id);
                                     // envoi de l'email contenant le lien de validation de compte.
-                                    Utils::messageSuccess('Nous vous remercions de vous être enregistré, un email vous à été envoyé afin de valider votre compte !', 'login');
+                                    Utils::messageSuccess('Nous vous remercions de vous être enregistré
+                                    , un email vous à été envoyé afin de valider votre compte !', 'login');
                                 } else {
-                                    Utils::messageError('Une erreur c\'est produite lors de l\'enregistrement de votre compte, veuillez réssayer s\'il vous plait !', 'login');
+                                    Utils::messageError('Une erreur c\'est produite lors de l\'enregistrement 
+                                    de votre compte, veuillez réssayer s\'il vous plait !', 'login');
                                 }
                             } else {
                                 Utils::messageError('Les mots de passe ne sont pas identique.', 'login');
                             }
                         } else {
-                            Utils::messageError('Votre mot de passe doit contenir au moins 4 caractères !', 'login');
+                            Utils::messageError('Votre mot de passe doit contenir au moins 4 caractères !'
+                                , 'login');
                         }
                     } else {
                         Utils::messageError('L\'adresse mail existe déjà !', 'login');
@@ -155,12 +165,14 @@ class BackController extends Controller
             if ($userId != 0 && is_string($key)) {
                 $user = $this->userDAO->getUser('id', $userId);
                 if ($user->getValidationKey() === $key) {
-                    $this->userDAO->update( $user->getId(), $user->getPassword(), $user->getEmail(), $user->getquality(),'active', $user->getValidationKey());
-                    Utils::messageSuccess('Félicitation votre compte est actif, vous pouvez vous identifier !', 'login');
+                    $this->userDAO->update( $user->getId(), $user->getPassword(), $user->getEmail(), $user->getquality()
+                        ,'active', $user->getValidationKey());
+                    Utils::messageSuccess('Félicitation votre compte est actif, vous pouvez vous identifier !'
+                        , 'login');
                 }
             }
         } else {
-            $this->view->render('login');
+            $this->viewTwig->render('login.twig');
         }
     }
 
@@ -188,37 +200,54 @@ class BackController extends Controller
         }
     }
 
-    public function passwordUpdate($post)
+    public function passwordUpdate($post, $userId = null, $key = null)
     {
-        if (isset($post['submit']) && isset($post['email'])) {
-            if ((filter_var($post['email'], FILTER_VALIDATE_EMAIL)) && ($this->userDAO->getUser('email', $post['email']))) {
-                $validationKey = uniqid();
-                $user = $this->userDAO->getUser('email', $post['email']);
-                $this->userDAO->update($user->getId(), $user->getPassword(), $user->getEmail(), $user->getQuality(), $user->getStatus(), $validationKey);
-                Utils::sendMail('update-password',$user->getEmail(), $user, null, $validationKey);
-                Utils::messageSuccess('Opération réalisé avec success, un email vous a été envoyé !', 'login');
-            }
-        } elseif (isset($post['submit']) && isset($post['password']) && isset($post['password2'])) {
+        if (isset($post['submit']) && isset($post['password']) && isset($post['password2'])) {
             if ($post['password'] === $post['password2']) {
-                $user = $this->userDAO->getUser('id', $_SESSION['userId']);
-                if ($user->getValidationKey() === $_SESSION['key']) {
+                $user = $this->userDAO->getUser('id', $userId);
+                if ($user->getValidationKey() === $key) {
                     $password = sha1($post['password']);
                     $update = $this->userDAO->update($user->getId(),$password , $user->getEmail(),
                         $user->getquality(), $user->getStatus(), $user->getValidationKey());
                     session_destroy();
                     if ($update) {
-                        Utils::messageSuccess('Votre mot de passe à été mis à jour, vous pouvez vous connecter !', 'login');
+                        Utils::messageSuccess('Votre mot de passe à été mis à jour, vous pouvez vous connecter !'
+                            , 'login');
                     } else {
-                        Utils::messageError('Une erreur c\'est produite veuillez recommencer.', 'update-password');
+                        Utils::messageError('Une erreur c\'est produite veuillez recommencer.'
+                            , 'update_password');
                     }
                 }
             } else {
-                $message = Utils::messageAlert(false,null,'Les mots de passes doivent être identique');
+                $message = Utils::messageAlert(false,null
+                    ,'Les mots de passes doivent être identique');
                 Utils::addFlashBag('message', $message);
-                header('Location: index.php?p=update-password&userId='. $_SESSION['userId']. '&key=' . $_SESSION['key']);
+                header('Location: index.php?p=update_password&userId='.$userId.'&key='.$key);
             }
         } else {
-            $this->view->render('update-password');
+            $get = $_GET ?: '';
+            $this->viewTwig->render('update_password.twig', ['get' => $get]);
+        }
+    }
+
+    public function passwordReset($post)
+    {
+        if (isset($post['submit']) && isset($post['email'])) {
+            if ((filter_var($post['email'], FILTER_VALIDATE_EMAIL))
+                && ($this->userDAO->getUser('email', $post['email']))) {
+                $validationKey = uniqid();
+                $user = $this->userDAO->getUser('email', $post['email']);
+                $this->userDAO->update($user->getId(), $user->getPassword(), $user->getEmail(),
+                    $user->getQuality(), $user->getStatus(), $validationKey);
+                Utils::sendMail('update_password',$user->getEmail(), $user, null, $validationKey);
+                Utils::messageSuccess('Opération réalisé avec success, un email vous a été envoyé !'
+                    , 'login');
+            } else {
+                Utils::messageError('L\'adresse email n\existe pas !', 'reset_password');
+            }
+        } else {
+            $get = $_GET ?: '';
+            $this->viewTwig->render('update_password.twig', ['get' => $get]);
         }
     }
 

@@ -14,14 +14,16 @@ class FrontController extends Controller
 {
     public function home()
     {
-        $this->view->render('home');
+        $session = $_SESSION ?: '';
+        $this->viewTwig->render('home.twig', [ 'session' => $session ]);
     }
 
     public function getPostList($category)
     {
         $posts = $this->postDAO->getAll('waiting', $category);
-        $category = $this->categoryDAO->getCategory();
-        $this->view->render('post_list', ['posts' => $posts, 'category' => $category]);
+        $session = $_SESSION ?: '';
+        $this->viewTwig->render('post_list.twig', ['posts' => $posts,
+            'session' => $session ]);
     }
 
     public function post($id)
@@ -32,9 +34,11 @@ class FrontController extends Controller
         } else {
             if ($post->getPublish() == 'published' || Utils::isAdmin()) {
                 $comments = $this->commentDAO->getCommentFromPost($id);
-                $this->view->render('single', [
+                $session = $_SESSION ?: '';
+                $this->viewTwig->render('single.twig', [
                     'post' => $post,
-                    'comments' => $comments
+                    'comments' => $comments,
+                    'session' => $session
                 ]);
             }
         }
@@ -56,7 +60,8 @@ class FrontController extends Controller
                     Utils::addFlashBag('message', $message);
                 }
             }
-            $this->view->render('login');
+            $session = $_SESSION ?: '';
+            $this->viewTwig->render('login.twig', ['session' => $session]);
         } else {
             $errorM = ucfirst($_SESSION['username']) . ' vous êtes déjà connecté !';
             $message = Utils::messageAlert(false, null, $errorM);
@@ -96,8 +101,6 @@ class FrontController extends Controller
         if (Utils::isAdmin()) {
             /* on compare les id
              si pas de submit on appel le template pour modifier le commentaire*/
-            $comment = $this->commentDAO->getComment($idComment);
-            $this->view->render('update_comment', ['comment' => $comment]);
             if (isset($commentPost['submit'])) {
                 if (Utils::checkField(['content'], $commentPost)) {
                     // si présence du submit et du champ content on enregistre en bdd.
@@ -109,6 +112,10 @@ class FrontController extends Controller
                     Utils::addFlashBag('message', $message);
                     header('Location: index.php?p=post&idArt=' . $idArt);
                 }
+            } else {
+                $session = $_SESSION ?: '';
+                $comment = $this->commentDAO->getComment($idComment);
+                $this->viewTwig->render('update_comment.twig', ['comment' => $comment, 'session' => $session]);
             }
         } else {
             // message mis en cache pour lecture sur le template
@@ -137,7 +144,7 @@ class FrontController extends Controller
             }
         } elseif (!isset($idArt) && Utils::isAdmin()) {
             $this->commentDAO->delete($idComment);
-            header('Location: index.php?p=manage-comment');
+            header('Location: index.php?p=manage_comment');
         }
     }
 

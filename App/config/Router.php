@@ -41,7 +41,7 @@ class Router
                 case 'home':
                     $this->frontController->home();
                     break;
-                case 'post-list':
+                case 'post_list':
                     $this->frontController->getPostList(null);
                     break;
                 case 'post':
@@ -50,7 +50,7 @@ class Router
                 case'category':
                     $this->frontController->getPostList($_GET['category']);
                     break;
-                case 'add-category':
+                case 'add_category':
                     $this->backController->addCategory($_POST);
                     break;
                 case 'login':
@@ -62,47 +62,47 @@ class Router
                 case 'admin':
                     $this->backController->getAdmin();
                     break;
-                case'add-post':
+                case'add_post':
                     $this->backController->addPost($_POST);
                     break;
-                case 'update-post':
+                case 'update_post':
                     $this->backController->updatePost($_GET['idArt'], $_POST);
                     break;
-                case 'delete-post':
+                case 'delete_post':
                     $this->backController->deletePost($_GET['idArt']);
                     break;
-                case'publish-post':
+                case'publish_post':
                     $this->backController->updatePost($_GET['idArt'], $_POST, $_GET['publish']);
                     break;
-                case'add-comment':
+                case'add_comment':
                     $this->frontController->addComment($_POST, $_GET['idArt']);
                     break;
-                case 'delete-comment':
+                case 'delete_comment':
                     $this->frontController->deleteComment($_GET['idArt'], $_GET['idComment']);
                     break;
-                case 'update-comment':
+                case 'update_comment':
                     $this->frontController->updateComment($_GET['idComment'], $_GET['idArt'], $_POST);
                     break;
-                case'publish-comment':
+                case'publish_comment':
                     $this->backController->publishComment($_GET['idComment'], $_GET['publish']);
                     break;
-                case 'manage-comment':
+                case 'manage_comment':
                     $this->backController->GetCommentList();
                     break;
                 case'registration':
                     $this->backController->registration($_POST, $_GET['userId'], $_GET['key']);
                     break;
-                case 'update-password':
-                    $this->backController->PasswordUpdate($_POST);
+                case 'reset_password':
+                    $this->backController->PasswordReset($_POST);
                     break;
-                case 'update-user-status':
+                case 'update_password':
+                    $this->backController->PasswordUpdate($_POST, $_GET['userId'], $_GET['key']);
+                    break;
+                case 'update_user_status':
                     $this->backController->updateUserStatus($_GET['userId'], $_GET['status']);
                     break;
-                case 'update-user-quality':
+                case 'update_user_quality':
                     $this->backController->updateUserQuality($_GET['userId'], $_GET['quality']);
-                    break;
-                case 'is-admin':
-                    $this->backController->accountUpdate($_GET['id'], $_GET['quality']);
                     break;
                 case'contact':
                     $this->frontController->SenderMail($_POST);

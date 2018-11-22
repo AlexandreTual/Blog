@@ -11,10 +11,9 @@ use App\config\Autoloader;
 use App\config\Router;
 
 session_start();
+require '../../vendor/autoload.php';
 define('ROOT', dirname(__DIR__));
-require ROOT . '/config/Autoloader.php';
-
-Autoloader::register();
-
+//require ROOT.'/config/Autoloader.php';
+//Autoloader::register();
 $router = new Router();
 $router->run();

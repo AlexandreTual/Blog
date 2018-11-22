@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    {% block head %}
+    {% endblock %}
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../vendor/twitter/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="navbar-brand" href="index.php">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="navbar-brand" href="index.php?p=post_list">blog</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="" id="dropdown01" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">Catégories</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a href="index.php?p=category&category=1" class="dropdown-item">Actualité</a>
+                            <a href="index.php?p=category&category=2" class="dropdown-item">Tutoriel</a>
+                            <a href="index.php?p=category&category=3" class="dropdown-item">Culture</a>
+                        </div>
+                    </li>
+                    {% if session.quality %}
+                        <li class="nav-item dropdown float-right">
+                            <a class="nav-link dropdown-toggle" href="" id="dropdown01"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mon Compte</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown01">
+                                {% if session.quality == 'admin' %}
+                                    <a class="dropdown-item" href="index.php?p=admin">Administration</a>
+                                {% endif %}
+                                <a href="index.php?p=logout" class="dropdown-item btn btn-outline-danger">Deconnexion</a>
+                            </div>
+                        </li>
+                    {% else %}
+                        <a href="../public/index.php?p=login" class="btn btn-outline-success">Se connecter</a>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+</header>
+<main role="main" class="container" style="margin-bottom: 100px; margin-top: 100px">
+    {% block content %}
+    {% endblock %}
+</main>
+<script src="../../vendor/components/jquery/jquery.min.js"></script>
+<script src="../../vendor/twitter/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../vendor/ckeditor/ckeditor/ckeditor.js"></script>
+<script src="../public/js/test.js"></script>
+
+<script>CKEDITOR.replace('chapoPost');</script>
+<script>CKEDITOR.replace('contentPost');</script>
+</body>
+</html>

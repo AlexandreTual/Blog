@@ -1,16 +1,11 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Alex
- * Date: 09/11/2018
- * Time: 22:47
- */
-\App\Core\Utils::echoFlashBag('message');
-?>
-
-<div class="text-center"><h2>Gestionnaire des commentaires </h2></div><br>
-
-<table class="table table-bordered">
+{% extends 'layout.twig' %}
+{% block head %}
+    <title>Gestion des articles</title>
+{% endblock %}
+{% block content %}
+    <div class="text-center"><h2>Gestionnaire des commentaires </h2>
+    </div><br>
+    <table class="table table-bordered">
     <thead>
     <tr>
         <th class="text-center" scope="col">Id</th>
@@ -21,13 +16,12 @@
     </tr>
     </thead>
     <tbody>
-    <?php foreach ($comments AS $comment): ?>
+    {% for comment in comments %}
         <tr>
-            <th class="text-center"><?= $comment->getId() ?></th>
-            <th class="text-center"><?= $comment->getContent() ?></th>
-            <th class="text-center"><?= $comment->getUsername() ?></th>
-            <th class="text-center"><?= $comment->getDateAdded() ?></th>
-
+            <th class="text-center">{{ comment.id }}</th>
+            <th class="text-center">{{ comment.content }}</th>
+            <th class="text-center">{{ comment.username }}</th>
+            <th class="text-center">{{ comment.dateAdded }}</th>
             <th>
                 <div class="dropdown text-center">
                     <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
@@ -35,17 +29,17 @@
                         Action sur le commentaire
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a href="index.php?p=publish-comment&&idComment=<?= $comment->getId() ?>&publish=valid"
+                        <a href="index.php?p=publish_comment&&idComment={{ comment.id }}&publish=valid"
                            class="dropdown-item">Valider</a>
-                        <a href="index.php?p=delete-comment&idComment=<?= $comment->getId() ?>"
-                           class="dropdown-item"
+                        <a href="index.php?p=update_comment&idArt={{ comment.postId }}&idComment={{ comment.id }}"
+                           class="dropdown-item">Modifier</a>
+                        <a href="index.php?p=delete_comment&idComment={{ comment.id }}" class="dropdown-item"
                            onclick="return(confirm('La suppression est définitive, êtes-vous sûr de vouloir continuer ?'));">
                             Supprimer</a>
+                    </div>
+                </div>
             </th>
-            </div>
-            </div>
         </tr>
-    <?php endforeach; ?>
+    {% endfor %}
     </tbody>
-
-</table>
+{% endblock %}

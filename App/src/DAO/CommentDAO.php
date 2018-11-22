@@ -33,7 +33,7 @@ class CommentDAO extends DAO
 
     public function getComment($idComment)
     {
-        $sql = 'SELECT id
+        $sql = 'SELECT id, content, date_added, username, post_id
                     FROM comment 
                     WHERE comment.id = :id';
         $req = $this->checkConnection()->prepare($sql);
@@ -89,7 +89,6 @@ class CommentDAO extends DAO
             $sql = "UPDATE comment SET content = :content, publish = 'waiting' WHERE id = :idComment";
             $req = $this->checkConnection()->prepare($sql);
             $req->bindValue(':content', $comment->getContent(), \PDO::PARAM_STR);
-            $req->bindValue(':date_amended', $comment->getDateAmended(), \PDO::PARAM_STR);
             $req->bindValue(':idComment', $idComment, \PDO::PARAM_INT);
 
             return $req->execute();
@@ -115,12 +114,6 @@ class CommentDAO extends DAO
             $comment->setDateAdded($data['date_added'] ?? null);
         } else {
             $comment->setDateAdded(($dateTime = new \DateTime())->format('Y:m:d H:i:s'));
-        }
-        // si $update vaut true on set avec DateTime sinon on set avec les $data
-        if ($update === true) {
-            $comment->setDateAmended(($dateTime = new \DateTime())->format('Y:m:d H:i:s'));
-        } else {
-            $comment->setDateAmended($data['date_amended'] ?? null);
         }
         $comment->setPostId($data['post_id'] ?? null);
         $comment->setPublish($data['publish'] ?? null);
