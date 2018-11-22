@@ -15,10 +15,12 @@ class Post
     private $chapo;
     private $content;
     private $author;
+    private $category;
     private $date_added;
     private $date_amended;
     private $publish;
     private $comments_status_number;
+    private $user_id;
 
     /**
      * @return mixed
@@ -34,7 +36,7 @@ class Post
      */
     public function setId($id)
     {
-        $this->id = (int) $id;
+        $this->id = (int)$id;
         return $this;
     }
 
@@ -113,10 +115,30 @@ class Post
     public function setAuthor($author)
     {
         if (is_string($author)) {
-        $this->author = $author;
+            $this->author = $author;
         }
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     * @return Post
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+        return $this;
+    }
+
+
 
     /**
      * @return mixed
@@ -194,9 +216,23 @@ class Post
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
 
-
-
+    /**
+     * @param mixed $user_id
+     * @return Post
+     */
+    public function setUserId($user_id)
+    {
+        $this->user_id = (int)$user_id;
+        return $this;
+    }
 
 
 }

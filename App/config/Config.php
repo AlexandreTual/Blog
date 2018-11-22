@@ -5,13 +5,19 @@
  * Date: 02/11/2018
  * Time: 16:50
  */
+
 namespace App\config;
 
 class Config
 {
 
-    private $settings = [];
     private static $_instance;
+    private $settings = [];
+
+    public function __construct($file)
+    {
+        $this->settings = require($file);
+    }
 
     public static function getInstance($file)
     {
@@ -19,11 +25,6 @@ class Config
             self::$_instance = new Config($file);
         }
         return self::$_instance;
-    }
-
-    public function __construct($file)
-    {
-        $this->settings = require($file);
     }
 
     public function get($key)

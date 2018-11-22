@@ -1,0 +1,32 @@
+{% macro input(name, label, value = null, options = []) %}
+    <div class="form-group {{ options.class ?: '' }}">
+        <label for="{{ name }}">{{ label }}</label>
+        <input type="{{ options.type ?: 'text' }}" class="form-control" name="{{ name }}" id="{{ options.id ?: name }}"
+               value="{{ value }}" {{ options.attribut ?: '' }} placeholder="{{ options.placeholder ?: '' }}">
+    </div>
+{% endmacro %}
+
+{% macro textarea(name, label, value = null, options = []) %}
+    <div class="form-group {{ options.class ?: '' }}">
+        <label for="{{ name }}">{{ label }}</label>
+        <textarea class="form-control" name="{{ name }}" id="{{ options.id ?: name }}" rows="{{ options.rows ?: '' }}"
+                {{ options.attribut ?: '' }} >{{ value }}</textarea>
+    </div>
+{% endmacro %}
+
+{% macro submit(label, options = []) %}
+    <div class="form-group">
+        <input type="submit" name="submit" class="btn {{ options.class ?: 'btn-primary' }}" value="{{ label }}">
+    </div>
+{% endmacro %}
+
+{% macro select(name, label, selector) %}
+    <div class="form-group">
+        <label for="{{ name }}">{{ label }}</label>
+        <select class="custom-select {{ options.class ?: '' }}" name="{{ name }}" id="{{ name }}">
+            {% for value in selector  %}
+                <option value="{{ value.id }}">{{ value.name | capitalize }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endmacro %}

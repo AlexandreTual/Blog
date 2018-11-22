@@ -2,16 +2,13 @@
 
 namespace App\src\model;
 
-
 class Comment
 {
     private $id;
     private $username;
     private $content;
     private $dateAdded;
-    private $dateAmended;
     private $postId;
-    private $userId;
     private $publish;
 
     /**
@@ -28,7 +25,7 @@ class Comment
      */
     public function setId($id)
     {
-        $this->id = (int) $id;
+        $this->id = (int)$id;
         return $this;
     }
 
@@ -97,26 +94,6 @@ class Comment
     /**
      * @return mixed
      */
-    public function getDateAmended()
-    {
-        return $this->dateAmended;
-    }
-
-    /**
-     * @param mixed $dateAmended
-     * @return Comment
-     */
-    public function setDateAmended($dateAmended)
-    {
-        if (is_string($dateAmended)) {
-            $this->dateAmended = $dateAmended;
-        }
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getPostId()
     {
         return $this->postId;
@@ -128,7 +105,7 @@ class Comment
      */
     public function setPostId($postId)
     {
-        $this->postId = (int) $postId;
+        $this->postId = (int)$postId;
         return $this;
     }
 
@@ -146,7 +123,7 @@ class Comment
      */
     public function setUserId($userId)
     {
-        $this->userId = (int) $userId;
+        $this->userId = (int)$userId;
         return $this;
     }
 
@@ -167,7 +144,6 @@ class Comment
         $this->publish = $publish;
         return $this;
     }
-
 
 
 }

@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: Alex
- * Date: 02/11/2018
- * Time: 16:48
+ * Date: 18/11/2018
+ * Time: 22:16
  */
 
 namespace App\config;
@@ -21,4 +21,5 @@ class Autoloader
         $class = str_replace('\\', '/', $class);
         require '../'.$class.'.php';
     }
+
 }

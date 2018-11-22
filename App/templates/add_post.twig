@@ -1,0 +1,19 @@
+{% extends 'layout.twig' %}
+{% import 'form_bootstrap.twig' as form %}
+
+{% block head %}
+    <title>Ajout d'article</title>
+{% endblock %}
+
+{% block content %}
+    <div class="text-center"><h1>Création d'un nouvel article</h1></div>
+    <form action="index.php?p=add_post" method="post" novalidate>
+        <div class="form-group">
+            {{ form.input('title', 'Titre', null, {attribut: 'required'}) }}
+            {{ form.textarea('chapo', 'Chapô', null, {attribut: 'required', id: 'chapoPost'}) }}
+            {{ form.textarea('content', 'Contenu de l\'article', null, {attribut: 'required', id: 'contentPost'}) }}
+            {{ form.select('category', null, category) }}
+            {{ form.submit('Valider', {class: 'btn-primary mt-4 float-right'}) }}
+        </div>
+    </form>
+{% endblock %}

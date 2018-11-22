@@ -1,0 +1,17 @@
+{% extends 'layout.twig' %}
+{% import 'form_bootstrap.twig' as form %}
+{% block head %}
+    <title>modification d'article</title>
+{% endblock %}
+{% block content %}
+<div class="text-center"><h1>Modification d'un article</h1></div>
+<form action="index.php?p=update_post&idArt={{ post.id }}" method="post">
+    <div class="from-group">
+        {{ form.input('title', 'Titre', post.title, {attribut: 'required'}) }}
+        {{ form.textarea('chapo', 'Chapô', post.chapo, {id: 'chapoPost', attribut: 'required'}) }}
+        {{ form.textarea('content', 'Contenu de l\'article', post.content, {id: 'contentPost', attribut: 'required'}) }}
+        {{ form.select('category', 'Catégories', category ) }}
+        {{ form.submit('Valider les modifications', {class: 'btn-primary mt-4 float-right'}) }}
+    </div>
+</form>
+{% endblock %}
