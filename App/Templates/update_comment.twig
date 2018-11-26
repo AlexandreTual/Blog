@@ -1,0 +1,16 @@
+{% extends 'layout.twig' %}
+{% import 'macro/form_bootstrap.twig' as form %}
+{% block head %}
+    <title>Modification de commentaire</title>
+{% endblock %}
+{% block content %}
+    <h1>Modification de commentaire</h1>
+    <p>{{ comment.content|capitalize }}</p>
+    <p>Posté le : {{ comment.dateAdded }}<br>
+        Auteur : <strong>{{ comment.username | capitalize}}</strong></p><br>
+    <form action="index.php?p=update_comment&idArt={{ comment.postId }}&idComment={{ comment.id }}"
+          method="post">
+        {{ form.textarea('content', 'Contenu à modifier', comment.content, {attribut: 'required'}) }}
+        {{ form.submit('Valider la modification') }}
+    </form>
+{% endblock %}
