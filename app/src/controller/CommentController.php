@@ -2,77 +2,33 @@
 /**
  * Created by PhpStorm.
  * User: Alex
- * Date: 02/11/2018
- * Time: 16:57
+ * Date: 27/11/2018
+ * Time: 13:14
  */
 
 namespace app\src\controller;
+
 use app\core\Utils;
 
-class FrontController extends Controller
+class CommentController extends Controller
 {
-    public function home()
+    public function getCommentList()
     {
-        $this->viewTwig->render('home.twig', []);
-    }
-
-    public function getPostList($category)
-    {
-        $posts = $this->postDAO->getAll('waiting', $category);
-        $message = '';
-
-        if (!$posts) {
-            $message = 'Pas d\'article disponible pour le moment dans cette catégorie !<br> 
-            N\'hésitez pas à découvrir nos autres catégories !';
-        }
-        $this->viewTwig->render('post_list.twig', ['posts' => $posts, 'message' => $message]);
-    }
-
-    public function post($postId)
-    {
-        $post = $this->postDAO->getPost($postId);
-        if (!$post) {
-            Utils::postWaiting();
-        } else {
-            if ($post->getPublish() == 'published' || Utils::isAdmin()) {
-                $comments = $this->commentDAO->getCommentFromPost($postId);
-                $this->viewTwig->render('single.twig', [
-                    'post' => $post,
-                    'comments' => $comments
-                ]);
-            }
+        if (Utils::isAdmin()) {
+            $comments = $this->commentDAO->getComments('waiting');
+            $this->viewTwig->render('manage_comment.twig', ['comments' => $comments]);
         }
     }
 
-    public function login($login)
+    public function publishComment($idComment, $publish)
     {
-
-        // s'il n'y a pas de session avec un identifiant. on redirige vers le formulaire de connexion.
-        if (!isset($_SESSION['userId'])) {
-            /*si le champ submit est présent et que les champs username et password correspondent,
-        on connecte l'utilisateur*/
-            if (isset($login['submit'])) {
-                if ($this->userDAO->getLogin($login['username'], $login['password'])) {
-                    Utils::messageSuccess('Bienvenue ' . ucfirst($_SESSION['username']) . ' !', 'home');
-                } else {
-                    $errorM = 'Identifants incorrect ou compte inactif.';
-                    $message = Utils::messageAlert(false, null, $errorM);
-                    Utils::addFlashBag('message', $message);
-                }
-            }
-            $this->viewTwig->render('login.twig', []);
-        } else {
-            $errorM = ucfirst($_SESSION['username']) . ' vous êtes déjà connecté !';
-            $message = Utils::messageAlert(false, null, $errorM);
+        if (Utils::isAdmin()) {
+            $this->commentDAO->update($idComment, null, $publish);
+            $successM = 'Le commentaire vient d\'être publié';
+            $message = Utils::messageAlert(true, $successM, null);
             Utils::addFlashBag('message', $message);
-            header('Location: index.php');
+            header('Location: index.php?p=manage_comment');
         }
-    }
-
-    public function logout()
-    {
-        session_destroy();
-        Utils::messageSuccess('Vous êtes Déconnecté !', 'home');
     }
 
     public function addComment($comment, $idArt)
@@ -145,15 +101,4 @@ class FrontController extends Controller
             header('Location: index.php?p=manage_comment');
         }
     }
-
-    public function senderMail($post)
-    {
-        if(Utils::checkField(['firstname', 'lastname', 'content', 'email'], $post)) {
-            Utils::sendMail('contact', 'tual.alexandre@gmail.com', $post);
-            Utils::messageSuccess('Votre message vient d\'être envoyé, vous serez contacté prochainement.','home' );
-        } else {
-            Utils::messageError('Veuillez remplir tout les champs pour envoyer votre message', 'home');
-        }
-    }
-
 }

@@ -14,16 +14,16 @@ use PDO;
 
 abstract class DAO
 {
-    private $db;
+    private $database;
 
     public function checkConnection()
     {
         //Vérifie si la connexion est null et fait appel à getDB()
-        if ($this->db === null) {
-            $this->db = $this->getDB();
+        if ($this->database === null) {
+            $this->database = $this->getDB();
         }
         //Si la connexion existe, elle est renvoyée, inutile de refaire une connexion
-        return $this->db;
+        return $this->database;
     }
 
 
@@ -35,11 +35,15 @@ abstract class DAO
             $db_instance = new PDO('mysql:host=' . $config->get('db_host') . ';dbname=' . $config->get('db_name') .
                 ';charset=' . $config->get('db_charset'), $config->get('db_user'), $config->get('db_pass'));
             $db_instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $db_instance;
 
+            return $db_instance;
         } // si echec on lève une erreur.
         catch (Exception $errorConnection) {
-            die ('Erreur de connexion : ' . $errorConnection->getMessage());
+            $handle = fopen('..\config\error\error.txt', 'a');
+            $errorMessage = $errorConnection->getMessage().'\r\n';
+            fwrite($handle, $errorMessage);
+            fclose($handle);
+            header('location:index.php?p=maintenance');
         }
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace app\src\model;
 
 class Comment

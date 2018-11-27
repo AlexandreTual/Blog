@@ -10,9 +10,13 @@ namespace app\src\dao;
 
 use app\src\model\User;
 
-
 class UserDAO extends DAO
 {
+    /**
+     * @param $username
+     * @param $password
+     * @return bool
+     */
     public function getLogin($username, $password)
     {
         $sql = 'SELECT id, username, password, quality, status FROM user WHERE username = :username';
@@ -34,9 +38,15 @@ class UserDAO extends DAO
                 }
             }
         }
+
         return false;
     }
 
+    /**
+     * @param $column
+     * @param $info
+     * @return User|bool
+     */
     public function getUser($column, $info)
     {
         $sql = 'SELECT id, username, password, email, quality, status, validation_key  FROM user';
@@ -58,6 +68,9 @@ class UserDAO extends DAO
         }
     }
 
+    /**
+     * @return array
+     */
     public function getAllUser()
     {
         $sql = 'SELECT id, username, quality, status FROM user ORDER BY id';
@@ -68,9 +81,17 @@ class UserDAO extends DAO
             $userId = $row['id'];
             $users[$userId] = $this->buildObject($row);
         }
+
         return $users;
     }
 
+    /**
+     * @param $username
+     * @param $email
+     * @param $password
+     * @param $validationKey
+     * @return bool
+     */
     public function add($username, $email, $password, $validationKey) : bool
     {
         $sql = 'INSERT INTO user (username, password, email, validation_key) 
@@ -84,7 +105,16 @@ class UserDAO extends DAO
         return $req->execute();
     }
 
-    public function update($id, $password, $email, $quality, $status, $validationKey)
+    /**
+     * @param $userId
+     * @param $password
+     * @param $email
+     * @param $quality
+     * @param $status
+     * @param $validationKey
+     * @return bool
+     */
+    public function update($userId, $password, $email, $quality, $status, $validationKey)
     {
         $sql = 'UPDATE user 
                 SET password = :password, email = :email, quality = :quality, status = :status,
@@ -96,11 +126,15 @@ class UserDAO extends DAO
         $req->bindValue(':quality', $quality, \PDO::PARAM_STR);
         $req->bindValue(':status', $status, \PDO::PARAM_BOOL);
         $req->bindValue(':validation_key', $validationKey, \PDO::PARAM_STR);
-        $req->bindValue(':id', $id, \PDO::PARAM_INT);
+        $req->bindValue(':id', $userId, \PDO::PARAM_INT);
 
         return $req->execute();
     }
 
+    /**
+     * @param $email
+     * @return bool
+     */
     public function addNewsletter($email)
     {
         $sql = 'INSERT INTO newsletter (email) VALUES (:email)';
@@ -110,6 +144,10 @@ class UserDAO extends DAO
         return $req->execute();
     }
 
+    /**
+     * @param $email
+     * @return bool
+     */
     public function getNewsletter($email)
     {
         $sql = 'SELECT email FROM newsletter WHERE email = :email';
@@ -120,10 +158,15 @@ class UserDAO extends DAO
         if ($result) {
             return true;
         }
+
         return false;
     }
 
 
+    /**
+     * @param array $data
+     * @return User
+     */
     public function buildObject(array $data): User
     {
         $user = new User();

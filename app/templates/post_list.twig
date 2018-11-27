@@ -11,7 +11,7 @@
             <div class="col-lg-6 d-flex align-items-stretch flex-column mb-4">
                 <div class="card bg-light ">
                     <div class="card-body" style="min-height: 250px">
-                        <h5 class="card-title"><a href="../public/index.php?p=post&idArt={{ post.id }}">{{ post.title|capitalize }}</a></h5>
+                        <h5 class="card-title"><a href="index.php?p=post&idArt={{ post.id }}">{{ post.title|capitalize }}</a></h5>
                         <h6 class="card-subtitle mb-2 text-muted">{{ post.category|capitalize }}</h6>
                         <p class="card-text">{{ post.chapo|striptags|raw }}</p>
                         <a class="card-link" href="../public/index.php?p=post&idArt={{ post.id }}">Lire l'article</a>

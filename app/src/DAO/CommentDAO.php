@@ -26,6 +26,7 @@ class CommentDAO extends DAO
             $commentId = $row['id'];
             $comments[$commentId] = $this->buildObject($row);
         }
+
         return $comments;
     }
 
@@ -58,6 +59,7 @@ class CommentDAO extends DAO
             $commentId = $row['id'];
             $comments[$commentId] = $this->buildObject($row);
         }
+
         return $comments;
 
     }

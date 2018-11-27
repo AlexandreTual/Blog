@@ -22,6 +22,7 @@ class CategoryDAO extends DAO
             $categoryId = $row['id'];
             $category[$categoryId] = $this->buildObject($row);
         }
+
         return $category;
     }
 
@@ -31,6 +32,7 @@ class CategoryDAO extends DAO
         $sql = 'INSERT INTO category (name) VALUES (:name)';
         $req = $this->checkConnection()->prepare($sql);
         $req->bindValue(':name', $category->getName(), \PDO::PARAM_STR);
+
         return $req->execute();
     }
 

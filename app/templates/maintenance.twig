@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+    <link rel="stylesheet" href="../public/css/style.css">
+    <link href="../../vendor/twitter/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Mon blog</title>
+    <!-- Bootstrap core CSS -->
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="navbar-brand disabled" href="accueil">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand disabled" href="blog">Blog</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle disabled" href="" id="dropdown01" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">Catégories</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main role="main" class="container" style="margin-bottom: 100px; margin-top: 100px">
+   <div class="text-center alert alert-danger"><h3>Le site est en maintenance nous sommes désolé pour la gène occasionné !</h3></div>
+</main>
+<footer class="footer bg-dark text-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 mt-3">
+                <h5>Menu</h5>
+                <a class="disabled" href="accueil">Accueil</a><br>
+                <a lass="disabled" href="blog">Blog</a>
+            </div>
+            <div class="col-md-4 mt-3 text-center">
+                <h5>Derniers articles paru </h5>
+
+            </div>
+            <div class="col-md-6 mt-3 text-center">
+                <h5 class="mb-4">Inscription à la newsletter</h5>
+                <form action="index.php?p=newsletter" method="post">
+                    <div class="form-inline justify-content-center">
+                        {{ form.input('email', null, null, {type: 'email'}) }}
+                        <div class="ml-4">
+                            {{ form.submit('Je m\'inscris', 'btn-success block-inline disabled') }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+<script src="../../vendor/components/jquery/jquery.min.js"></script>
+<script src="../../vendor/twitter/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../vendor/ckeditor/ckeditor/ckeditor.js"></script>
+<script src="../public/js/test.js"></script>
+
+<script>CKEDITOR.replace('chapoPost');</script>
+<script>CKEDITOR.replace('contentPost');</script>
+</body>
+</html>
