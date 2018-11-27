@@ -7,11 +7,11 @@
  */
 
 namespace app\src\model;
-use Twig_Loader_Filesystem;
-use Twig_Environment;
-use app\templates\extension\TwigExtension;
-use Twig_Extensions_Extension_Text;
 
+use app\templates\extension\TwigExtension;
+use Twig_Environment;
+use Twig_Extensions_Extension_Text;
+use Twig_Loader_Filesystem;
 
 class ViewTwig
 {

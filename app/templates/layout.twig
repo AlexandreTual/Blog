@@ -1,6 +1,6 @@
 {% import 'macro/form_bootstrap.twig' as form %}
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,10 +8,10 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
     <link rel="stylesheet" href="../public/css/style.css">
+    <link href="../../vendor/twitter/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     {% block head %}
     {% endblock %}
     <!-- Bootstrap core CSS -->
-    <link href="../../vendor/twitter/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <header>
@@ -45,7 +45,7 @@
                         </div>
                     </li>
                 {% else %}
-                    <a href="../public/index.php?p=login" class="btn btn-outline-success">Se connecter</a>
+                    <a href="index.php?p=login" class="btn btn-outline-success">Se connecter</a>
                 {% endif %}
             </ul>
         </div>
@@ -62,12 +62,12 @@
             <div class="col-md-2 mt-3">
                 <h5>Menu</h5>
                 <a href="index.php">Accueil</a><br>
-                <a href="index.php?p=post-list">Blog</a>
+                <a href="index.php?p=post_list">Blog</a>
             </div>
             <div class="col-md-4 mt-3 text-center">
                 <h5>Derniers articles paru </h5>
                 {% for post in getLastPost() %}
-                    <a href="index.php?p=post&idArt={{ post.id }}">{{ post.title|truncate(30, true, '...') }}</a><br>
+                    <a href="article/{{ post.id }}">{{ post.title|truncate(30, true, '...') }}</a><br>
                 {% endfor %}
             </div>
             <div class="col-md-6 mt-3 text-center">

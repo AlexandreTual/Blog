@@ -1,0 +1,25 @@
+{
+  "name": "ProjetBlog",
+  "description": "description_text",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Alexandre Tual",
+      "email": "tual.alexandre@gmail.com"
+    }
+  ],
+  "require": {
+    "twitter/bootstrap": "v4.1.3",
+    "components/jquery": "3.3.1",
+    "ckeditor/ckeditor": "4.11.1",
+    "twig/twig": "2.x-dev",
+    "ext-pdo": "*",
+    "twig/extensions": "v1.5.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "app\\": "app"
+    }
+  }
+}

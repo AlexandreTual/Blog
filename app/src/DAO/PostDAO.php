@@ -46,6 +46,7 @@ class PostDAO extends DAO
             $postId = $row['id'];
             $posts[$postId] = $this->buildObject($row);
         }
+
         return $posts;
     }
 
@@ -62,6 +63,7 @@ class PostDAO extends DAO
             $postId = $row['id'];
             $posts[$postId] = $this->buildObject($row);
         }
+
         return $posts;
     }
 
@@ -82,6 +84,7 @@ class PostDAO extends DAO
         if ($row = $result->fetch()) {
             return $this->buildObject($row);
         }
+
         return false;
     }
 
@@ -115,7 +118,7 @@ class PostDAO extends DAO
      * @param null $publish
      * @return bool
      */
-    public function update($id, $post, $publish = null) : bool
+    public function update($postId, $post, $publish = null) : bool
     {
         if (isset($post)) {
             $post = $this->buildObject($post, true);
@@ -127,7 +130,7 @@ class PostDAO extends DAO
 
             $req = $this->checkConnection()->prepare($sql);
             $req->bindValue(':publish', $publish, \PDO::PARAM_STR);
-            $req->bindValue(':id', $id, \PDO::PARAM_INT);
+            $req->bindValue(':id', $postId, \PDO::PARAM_INT);
 
             return $req->execute();
         } else {
@@ -141,7 +144,7 @@ class PostDAO extends DAO
             $req->bindValue(':content', $post->getContent(), \PDO::PARAM_STR);
             $req->bindValue(':date_amended', $post->getDateAmended(), \PDO::PARAM_STR);
             $req->bindValue(':category_id', $category, \PDO::PARAM_INT);
-            $req->bindValue(':id', $id, \PDO::PARAM_INT);
+            $req->bindValue(':id', $postId, \PDO::PARAM_INT);
 
             return $req->execute();
         }
@@ -151,11 +154,12 @@ class PostDAO extends DAO
      * @param $id
      * @return bool
      */
-    public function delete($id) : bool
+    public function delete($postId) : bool
     {
         $sql = 'DELETE FROM post WHERE id = :id';
         $req = $this->checkConnection()->prepare($sql);
-        $req->bindValue(':id', $id, \PDO::PARAM_INT);
+        $req->bindValue(':id', $postId, \PDO::PARAM_INT);
+
         return $req->execute();
     }
 
