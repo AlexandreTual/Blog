@@ -1,5 +1,7 @@
 #Projet Blog
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7402b90ba5a945abb2cf1ed766846380)](https://app.codacy.com/app/AlexandreTual/Blog?utm_source=github.com&utm_medium=referral&utm_content=AlexandreTual/Blog&utm_campaign=Badge_Grade_Dashboard)
+
 Dans le cadre de la formation "Développeur d'application PHP / Symphony" 
 je réalise un blog en PHP orienté objet.
 
