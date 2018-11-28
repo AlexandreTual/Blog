@@ -10,28 +10,17 @@ namespace app\core;
 
 abstract class Utils
 {
-    public static function echoFlashBag($key)
-    {
-        $message = Utils::getFlashBag($key);
-        if (!empty($message)) {
-            echo $message;
-        }
-    }
-
     /**
      * Retourne la valeur enregistrée en session et l'efface
      */
     public static function getFlashBag($key)
     {
-
         if (isset($_SESSION['flashbag'][$key])) {
-
             $flashbag = $_SESSION['flashbag'][$key];
-
             unset($_SESSION['flashbag'][$key]);
-
             return $flashbag;
         }
+
         return false;
     }
 
@@ -72,8 +61,6 @@ abstract class Utils
             $message = Utils::messageAlert(false, null, $errorM);
             Utils::addFlashBag('message', $message);
             header('Location: index.php');
-
-            return true;
         }
     }
 
@@ -106,7 +93,7 @@ abstract class Utils
         $successM = $message;
         $message = Utils::messageAlert(true, $successM, null);
         Utils::addFlashBag('message', $message);
-        header('Location: index.php?p=' . $redirection);
+        header('Location:index.php?p=' . $redirection);
     }
 
     public static function sendMail($html, $recipient = null, $post = null, $username = null, $validationKey = null, $id = null)

@@ -67,7 +67,7 @@
             <div class="col-md-4 mt-3 text-center">
                 <h5>Derniers articles paru </h5>
                 {% for post in getLastPost() %}
-                    <a href="article/{{ post.id }}">{{ post.title|truncate(30, true, '...') }}</a><br>
+                    <a href="index.php?p=post&idArt={{ post.id }}">{{ post.title|truncate(30, true, '...') }}</a><br>
                 {% endfor %}
             </div>
             <div class="col-md-6 mt-3 text-center">

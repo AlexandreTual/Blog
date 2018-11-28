@@ -21,7 +21,7 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `blog`
 --
-CREATE DATABASE IF NOT EXISTS `monblog` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS `blog` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `monblog`;
 
 -- --------------------------------------------------------
@@ -147,10 +147,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `username`, `password`, `email`, `quality`, `status`, `validation_key`) VALUES
 (1, 'demo', '89e495e7941cf9e40e6980d14a16bf023ccd4c91', '', 'admin', 1, NULL),
-(6, 'morgan', 'e14b8fc30c87ae8e2d2b0afe81014bc65f69a973', '', 'admin', 1, NULL),
-(9, 'marion', 'a0ea4d800771184c49481ccbad2b2bc57a4f748a', 'marion.zimmermann.megret@gmail.com', 'user', 1, '5bf084f0498df'),
-(10, 'alex', '60c6d277a8bd81de7fdde19201bf9c58a3df08f4', '', 'user', 1, NULL),
-(25, 'alois', '99df988b77e60a1718e9e6fecdaf22552047be28', '', 'user', 0, '5bf587e4627ca');
+(10, 'alex', '60c6d277a8bd81de7fdde19201bf9c58a3df08f4', '', 'user', 1, NULL);
 
 --
 -- Contraintes pour les tables déchargées

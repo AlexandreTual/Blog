@@ -28,6 +28,8 @@ class AppController extends Controller
                 if ((filter_var($post['email'], FILTER_VALIDATE_EMAIL))
                     && (!$this->userDAO->getNewsletter($post['email']))) {
                     $this->userDAO->addNewsletter($post['email']);
+                    $message = Utils::messageAlert(true,'Vous êtes inscrit à notre newsletter !',null);
+                    Utils::addFlashBag('message', $message);
                     header('Location: index.php');
                 } else {
                     header('Location: index.php');
