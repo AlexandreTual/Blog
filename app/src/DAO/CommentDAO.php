@@ -14,7 +14,7 @@ class CommentDAO extends DAO
 {
     public function getCommentFromPost($idArt)
     {
-        $sql = "SELECT id, content, date_added, post_id, author
+        $sql = "SELECT id, content, date_added, post_id, author, user_id
                 FROM comment  
                 WHERE post_id= :id AND publish = 'valid'
                 ORDER BY id DESC";
@@ -34,7 +34,7 @@ class CommentDAO extends DAO
 
     public function getComment($idComment)
     {
-        $sql = 'SELECT id, content, date_added, author, post_id
+        $sql = 'SELECT id, content, date_added, user_id, author, post_id
                     FROM comment 
                     WHERE comment.id = :id';
         $req = $this->checkConnection()->prepare($sql);
@@ -47,7 +47,7 @@ class CommentDAO extends DAO
 
     public function getComments($publish)
     {
-        $sql = 'SELECT id, content, date_added, author 
+        $sql = 'SELECT id, content, date_added, user_id, author 
                 FROM comment
                 WHERE publish = :publish ORDER BY id';
         $req = $this->checkConnection()->prepare($sql);
@@ -67,11 +67,12 @@ class CommentDAO extends DAO
     public function add($comment, $idArt) : bool
     {
         $comment = $this->buildObject($comment);
-        $sql = "INSERT INTO comment (content, date_added, post_id, author) VALUES (:content, :date_added, :post_id, :author)";
+        $sql = "INSERT INTO comment (content, date_added, post_id, user_id, author) VALUES (:content, :date_added, :post_id, :user_id, :author)";
         $insert = $this->checkConnection()->prepare($sql);
         $insert->bindValue(':content', $comment->getContent(), \PDO::PARAM_STR);
         $insert->bindValue(':date_added', $comment->getDateAdded(), \PDO::PARAM_STR);
         $insert->bindValue(':post_id', $idArt, \PDO::PARAM_INT);
+        $insert->bindValue(':user_id', $comment->getUserId(), \PDO::PARAM_INT);
         $insert->bindValue(':author', $comment->getAuthor(), \PDO::PARAM_STR);
 
         return $insert->execute();
@@ -118,8 +119,8 @@ class CommentDAO extends DAO
             $comment->setDateAdded(($dateTime = new \DateTime())->format('Y:m:d H:i:s'));
         }
         $comment->setPostId($data['post_id'] ?? null);
+        $comment->setUserId($data['user_id'] ?? null);
         $comment->setPublish($data['publish'] ?? null);
-
         return $comment;
     }
 }

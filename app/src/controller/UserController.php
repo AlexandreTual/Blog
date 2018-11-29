@@ -47,7 +47,7 @@ class UserController extends Controller
                                         , $validationKey, $id);
                                     // envoi de l'email contenant le lien de validation de compte.
                                     Utils::messageSuccess('Nous vous remercions de vous être enregistré
-                                    , un email vous à été envoyé afin de valider votre compte !', 'login');
+                                    , un email vous a été envoyé afin de valider votre compte !', 'login');
                                 } else {
                                     Utils::messageError('Une erreur c\'est produite lors de l\'enregistrement 
                                     de votre compte, veuillez réssayer s\'il vous plait !', 'login');
@@ -100,7 +100,7 @@ class UserController extends Controller
                         $user->getquality(), $user->getStatus(), $user->getValidationKey());
                     session_destroy();
                     if ($update) {
-                        Utils::messageSuccess('Votre mot de passe à été mis à jour, vous pouvez vous connecter !'
+                        Utils::messageSuccess('Votre mot de passe a été mis à jour, vous pouvez vous connecter !'
                             , 'login');
                     } else {
                         Utils::messageError('Une erreur c\'est produite veuillez recommencer.'
@@ -135,7 +135,7 @@ class UserController extends Controller
                 Utils::messageSuccess('Opération réalisé avec success, un email vous a été envoyé !'
                     , 'login');
             } else {
-                Utils::messageError('L\'adresse email n\existe pas !', 'reset_password');
+                Utils::messageError('L\'adresse email n\'existe pas !', 'reset_password');
             }
         } else {
             $get = $_GET ?: '';
@@ -180,7 +180,7 @@ class UserController extends Controller
                 if ($req) {
                     Utils::messageSuccess('Qualité modifié !', 'admin');
                 } else {
-                    Utils::messageError('Erreur !! Status non modifié', 'admin');
+                    Utils::messageError('Erreur !! qualité non modifié', 'admin');
                 }
             }
         }

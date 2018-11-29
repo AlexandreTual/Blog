@@ -4,9 +4,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
     <link rel="stylesheet" href="../public/css/style.css">
     <link href="../../vendor/twitter/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     {% block head %}
@@ -15,16 +12,21 @@
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Mon Blog</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse ml-4" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="navbar-brand" href="index.php">Accueil</a>
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.php">Accueil </a>
                 </li>
-                <li class="nav-item">
-                    <a class="navbar-brand" href="index.php?p=post_list">Blog</a>
+                <li class="nav-item active ml-3">
+                    <a class="nav-link" href="index.php?p=post_list">Blog</a>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown active ml-3">
                     <a class="nav-link dropdown-toggle" href="" id="dropdown01" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">Catégories</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
@@ -33,22 +35,30 @@
                         {% endfor %}
                     </div>
                 </li>
-                {% if session.quality %}
-                    <li class="nav-item dropdown float-right">
-                        <a class="nav-link dropdown-toggle" href="" id="dropdown01"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mon Compte</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            {% if session.quality == 'admin' %}
-                                <a class="dropdown-item" href="index.php?p=admin">Administration</a>
-                            {% endif %}
-                            <a href="index.php?p=logout" class="dropdown-item btn btn-outline-danger">Deconnexion</a>
-                        </div>
-                    </li>
-                {% else %}
-                    <a href="index.php?p=login" class="btn btn-outline-success">Se connecter</a>
-                {% endif %}
             </ul>
         </div>
+        <form class="form-inline my-2 my-lg-0">
+            {% if session %}
+                <div class="btn-group dropleft">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item dropdown active">
+                                <a class="nav-link dropdown-toggle" href="" id="dropdown01" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false">{{ session.username|capitalize }} est connecté</a>
+                                <div class="dropdown-menu dropleft" aria-labelledby="dropdown01">
+                                    {% if session.quality == 'admin' %}
+                                        <a class="dropdown-item" href="index.php?p=admin">Administration</a>
+                                    {% endif %}
+                                    <a href="index.php?p=logout" class="dropdown-item btn btn-outline-danger">Deconnexion</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <a href="index.php?p=login" class="btn btn-outline-success">Se connecter</a>
+            {% endif %}
+        </form>
     </nav>
 </header>
 <main role="main" class="container" style="margin-bottom: 100px; margin-top: 100px">
@@ -59,7 +69,7 @@
 <footer class="footer bg-dark text-white">
     <div class="container">
         <div class="row">
-            <div class="col-md-2 mt-3">
+            <div class="col-xs-12 col-md-2 mt-3 text-center ">
                 <h5>Menu</h5>
                 <a href="index.php">Accueil</a><br>
                 <a href="index.php?p=post_list">Blog</a>
@@ -71,17 +81,18 @@
                 {% endfor %}
             </div>
             <div class="col-md-6 mt-3 text-center">
-                <h5 class="mb-4">Inscription à la newsletter</h5>
-                <form action="index.php?p=newsletter" method="post">
-                    <div class="form-inline justify-content-center">
-                        {{ form.input('email', null, null, {type: 'email'}) }}
-                        <div class="ml-4">
+                <h5 class="mb-2">Inscription à la newsletter</h5>
+                <form action="index.php?p=newsletter" method="post" class="">
+                        <div class="col-xs-10 offset-xs-1 col-sm-8 offset-sm-2">
+                            {{ form.input('email', null, null, {type: 'email'}) }}
+                        </div>
+                        <div class="col">
                             {{ form.submit('Je m\'inscris', 'btn-success block-inline') }}
                         </div>
-                    </div>
                 </form>
             </div>
         </div>
+    </div>
     </div>
 </footer>
 </body>

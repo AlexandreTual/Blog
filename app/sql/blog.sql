@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  mar. 27 nov. 2018 à 20:16
+-- Généré le :  jeu. 29 nov. 2018 à 20:36
 -- Version du serveur :  5.7.21
 -- Version de PHP :  7.2.4
 
@@ -22,7 +22,7 @@ SET time_zone = "+00:00";
 -- Base de données :  `blog`
 --
 CREATE DATABASE IF NOT EXISTS `blog` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `monblog`;
+USE `blog`;
 
 -- --------------------------------------------------------
 
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `category`
@@ -61,20 +61,21 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `publish` varchar(10) DEFAULT 'waiting',
   `post_id` int(11) DEFAULT NULL,
   `author` varchar(255) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `comment___f` (`post_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=137 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `comment`
 --
 
-INSERT INTO `comment` (`id`, `content`, `date_added`, `publish`, `post_id`, `author`) VALUES
-(132, 'Bonjour à tous !!', '2018-11-23 23:08:48', 'valid', 33, 'demo'),
-(133, 'Je suis un commentaire !!', '2018-11-23 23:09:22', 'valid', 33, 'Alex'),
-(134, 'J\'aime bien les zombies avec du ketchup !!', '2018-11-23 23:09:50', 'valid', 33, 'Carlos'),
-(135, 'Je suis un article !!', '2018-11-26 10:58:40', 'valid', 33, 'demo'),
-(136, 'Je m\'appelle Morgan !!!', '2018-11-26 11:14:00', 'valid', 33, 'Morgan');
+INSERT INTO `comment` (`id`, `content`, `date_added`, `publish`, `post_id`, `author`, `user_id`) VALUES
+(139, 'bonjour je suis un commentaire!', '2018-11-29 10:48:18', 'valid', 42, 'alex', 0),
+(142, 'hello\r\n', '2018-11-29 11:29:09', 'valid', 42, 'demo', 0),
+(143, 'je suis demoo', '2018-11-29 11:40:42', 'valid', 42, 'demo', 1),
+(147, 'bonjour je m\'appelle bob', '2018-11-29 11:49:31', 'valid', 42, 'bob', 0),
+(148, 'je suis alex', '2018-11-29 11:50:00', 'valid', 42, 'alex', 10);
 
 -- --------------------------------------------------------
 
@@ -89,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `newsletter` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `newsletter_email_uindex` (`email`),
   UNIQUE KEY `newsletter_id_uindex` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -139,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `validation_key` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `user`
@@ -147,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`id`, `username`, `password`, `email`, `quality`, `status`, `validation_key`) VALUES
 (1, 'demo', '89e495e7941cf9e40e6980d14a16bf023ccd4c91', '', 'admin', 1, NULL),
-(10, 'alex', '60c6d277a8bd81de7fdde19201bf9c58a3df08f4', '', 'user', 1, NULL);
+(26, 'alex', '60c6d277a8bd81de7fdde19201bf9c58a3df08f4', 'tual.alexandre@gmail.com', 'user', 1, '5c001fbb840df');
 
 --
 -- Contraintes pour les tables déchargées
