@@ -64,6 +64,18 @@ abstract class Utils
         }
     }
 
+    public static function isUser()
+    {
+        if (isset($_SESSION['quality']) && $_SESSION['quality'] === 'user') {
+            return true;
+        } else {
+            $errorM = 'Accès refusé !';
+            $message = Utils::messageAlert(false, null, $errorM);
+            Utils::addFlashBag('message', $message);
+            header('Location: index.php');
+        }
+    }
+
     public static function actionRefused()
     {
         $errorM = 'Cette action n\'est pas possible, vous avez été redirigez vers la page d\'accueil !';

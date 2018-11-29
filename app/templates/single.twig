@@ -20,19 +20,24 @@
         <form action="index.php?p=add_comment&idArt={{ post.id }}" method="post">
             {{ form.textarea('content', 'Votre commentaire :') }}
             {{ form.input('author', 'Votre nom :', session.username ) }}
+            {{ form.input('user_id', null, session.userId, {type: 'hidden'}) }}
             {{ form.submit('Soumettre', 'btn-primary') }}
         </form>
     </div>
     <div class="col-sm-4">
     {% for comment in comments %}
-    <div class="row bg-light border rounded my-2 py-2 col-sm-12">
-        <p><strong>{{ comment.author|capitalize }}</strong></p>
-        <p class="col-md-12">{{ comment.content }}</p>
-        <p><em>Posté le {{ comment.dateAdded|date("d/m/Y") }} à {{ comment.dateAdded|date("H:s:i") }}</em><br>
-            {% if session.quality == 'admin' %}
-            <a href="index.php?p=delete_comment&idArt={{ comment.postId }}&idComment={{ comment.id }}">Supprimer</a>
-            <a href="index.php?p=update_comment&idArt={{ comment.postId }}&idComment={{ comment.id }}">Modifier</a></p>
-        {% endif %}
-    </div>
-        {% endfor %}
+        <div class="row bg-light border rounded my-2 py-2 col-sm-12">
+            <p><strong>{{ comment.author|capitalize }}</strong></p>
+            <p class="col-md-12">{{ comment.content }}</p>
+            <p><em>Posté le {{ comment.dateAdded|date("d/m/Y") }} à {{ comment.dateAdded|date("H:s:i") }}</em><br>
+                {% if (session.userId == comment.userId and session) or session.quality == 'admin' %}
+                    <a href="index.php?p=delete_comment&idArt={{ comment.postId }}&idComment={{ comment.id }}"
+                       onclick="return(confirm('La suppression est définitive, êtes-vous sûr de vouloir continuer ?'));"
+                    >Supprimer</a>
+                {% endif %}
+                {% if session.quality == 'admin' %}
+                    <a href="index.php?p=update_comment&idArt={{ comment.postId }}&idComment={{ comment.id }}">Modifier</a>
+                {% endif %}
+        </div>
+    {% endfor %}
 {% endblock %}

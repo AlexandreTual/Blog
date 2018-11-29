@@ -9,6 +9,7 @@ class Comment
     private $dateAdded;
     private $postId;
     private $publish;
+    private $userId;
 
     /**
      * @return mixed
@@ -143,6 +144,8 @@ class Comment
         $this->publish = $publish;
         return $this;
     }
+
+
 
 
 }

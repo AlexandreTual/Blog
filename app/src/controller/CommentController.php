@@ -31,10 +31,9 @@ class CommentController extends Controller
         }
     }
 
-    public function addComment($comment, $idArt)
+    public function addComment(array $comment, int $idArt)
     {
         if (Utils::checkField(['content', 'author'], $comment)) {
-            $idArt = (int)$idArt;
             if (is_string($comment['content']) && is_string($comment['author'])) {
                 // insertion des différentes variables dans la bdd
                 $insert = $this->commentDAO->add($comment, $idArt);
@@ -48,11 +47,8 @@ class CommentController extends Controller
         }
     }
 
-    public function updateComment($idComment, $idArt, $commentPost)
+    public function updateComment(int $idComment, int $idArt, array $commentPost)
     {
-        // caster les variables pour être sur d'avoir des entiers.
-        $idArt = (int)$idArt;
-        $idComment = (int)$idComment;
         if (Utils::isAdmin()) {
             /* on compare les id
              si pas de submit on appel le template pour modifier le commentaire*/
@@ -82,7 +78,7 @@ class CommentController extends Controller
 
     public function deleteComment($idArt, $idComment)
     {
-        if ((isset($idArt)) && Utils::isAdmin()) {
+        if ((isset($idArt)) && (Utils::isUser() || Utils::isAdmin())) {
             // caster les variables pour être sur d'avoir des entiers.
             $idArt = (int)$idArt;
             $idComment = (int)$idComment;
